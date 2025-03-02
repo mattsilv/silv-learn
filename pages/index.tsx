@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
-import { Book, CheckCircle, BookOpen } from "lucide-react";
+import { Book, CheckCircle, BookOpen, Trophy, Star } from "lucide-react";
 import { getAllLessons } from "../utils/lessonService";
 import type { Lesson } from "../utils/lessonService";
 import { getAllTerms } from "../utils/glossaryService";
@@ -18,6 +18,9 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
   const [userCompletedTerms, setUserCompletedTerms] = useState<string[]>([]);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userCompletedLessons, setUserCompletedLessons] = useState<string[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,6 +32,7 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
         // Get user progress
         const userProgress = await getUserProgress();
         setUserCompletedTerms(userProgress.completedTerms || []);
+        setUserCompletedLessons(userProgress.completedLessons || []);
 
         setLoading(false);
       } catch (error) {
@@ -79,17 +83,33 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
         {/* Main content */}
         <main className="flex-1">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">
-              Available Lessons
-            </h1>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Available Lessons
+              </h1>
+              {!loading && (
+                <div className="flex items-center text-sm">
+                  <Trophy size={16} className="text-blue-500 mr-1" />
+                  <span className="font-medium">
+                    {userCompletedLessons.length}/{lessons.length}
+                  </span>
+                  <span className="text-gray-500 ml-1">lessons</span>
+                </div>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {lessons.map((lesson) => {
+                const isCompleted =
+                  !loading &&
+                  userCompletedLessons.includes(lesson.id.toString());
                 return (
                   <Link
                     href={`/lessons/${lesson.slug}`}
                     key={lesson.id}
-                    className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    className={`bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow ${
+                      isCompleted ? "border-l-4 border-green-500" : ""
+                    }`}
                   >
                     <div className="p-6">
                       <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -105,6 +125,15 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
                           {lesson.metadata.difficulty_level}
                         </div>
                       </div>
+
+                      {isCompleted && (
+                        <div className="mt-2">
+                          <span className="inline-flex items-center text-sm text-green-600">
+                            <CheckCircle size={14} className="mr-1" />
+                            Completed
+                          </span>
+                        </div>
+                      )}
 
                       {!loading &&
                         lesson.required_terms &&
@@ -150,11 +179,22 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
 
             {/* Glossary Terms Section */}
             <div className="mt-16">
-              <div className="flex items-center mb-6">
-                <BookOpen className="h-6 w-6 text-blue-600 mr-2" />
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Glossary Terms
-                </h2>
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center">
+                  <BookOpen className="h-6 w-6 text-blue-600 mr-2" />
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Glossary Terms
+                  </h2>
+                </div>
+                {!loading && (
+                  <div className="flex items-center text-sm">
+                    <Star size={16} className="text-yellow-500 mr-1" />
+                    <span className="font-medium">
+                      {userCompletedTerms.length}/{glossaryTerms.length}
+                    </span>
+                    <span className="text-gray-500 ml-1">terms</span>
+                  </div>
+                )}
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">

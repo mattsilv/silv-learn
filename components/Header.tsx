@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Trophy, Star, Users } from "lucide-react";
+import { Users, Menu, X } from "lucide-react";
 import LoginButton from "./LoginButton";
 
 type HeaderProps = {
@@ -15,25 +15,19 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ userStats }) => {
-  const {
-    termsLearned,
-    totalTerms,
-    lessonsCompleted,
-    totalLessons,
-    ranking,
-    totalUsers,
-  } = userStats;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { ranking, totalUsers } = userStats;
 
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center py-3">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white mr-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white mr-2 sm:mr-3">
                 <svg
-                  width="24"
-                  height="24"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -46,40 +40,24 @@ const Header: React.FC<HeaderProps> = ({ userStats }) => {
                   />
                 </svg>
               </div>
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
                 Silv<span className="text-indigo-600">Learn</span>
               </h1>
             </Link>
           </div>
 
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-4">
-              {/* Terms learned */}
-              <div className="flex items-center text-sm">
-                <Star size={16} className="text-yellow-500 mr-1" />
-                <span className="font-medium">
-                  {termsLearned}/{totalTerms}
-                </span>
-                <span className="text-gray-500 ml-1">terms</span>
-              </div>
-
-              {/* Lessons completed */}
-              <div className="flex items-center text-sm">
-                <Trophy size={16} className="text-blue-500 mr-1" />
-                <span className="font-medium">
-                  {lessonsCompleted}/{totalLessons}
-                </span>
-                <span className="text-gray-500 ml-1">lessons</span>
-              </div>
-
-              {/* Ranking */}
-              <div className="flex items-center text-sm">
-                <Users size={16} className="text-green-500 mr-1" />
-                <span className="font-medium">#{ranking}</span>
-                <span className="text-gray-500 ml-1">of {totalUsers}</span>
-              </div>
+          <div className="flex items-center space-x-3">
+            {/* Ranking - visible on all screens */}
+            <div className="flex items-center text-sm">
+              <Users size={16} className="text-green-500 mr-1 flex-shrink-0" />
+              <span className="text-gray-600 mr-1">Global Rank:</span>
+              <span className="font-medium">#{ranking}</span>
+              <span className="text-gray-500 ml-1 hidden sm:inline">
+                of {totalUsers}
+              </span>
             </div>
 
+            {/* Login button */}
             <LoginButton />
           </div>
         </div>
