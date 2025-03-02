@@ -40,9 +40,14 @@ const Header: React.FC<HeaderProps> = ({ userStats }) => {
                   />
                 </svg>
               </div>
-              <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
-                Silv<span className="text-indigo-600">Learn</span>
-              </h1>
+              <div>
+                <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
+                  Silv<span className="text-indigo-600">Learn</span>
+                </h1>
+                <p className="text-xs text-gray-500 -mt-1 hidden sm:block">
+                  Learning through microlessons
+                </p>
+              </div>
             </Link>
           </div>
 
@@ -50,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ userStats }) => {
             {/* Ranking - visible on all screens */}
             <div className="flex items-center text-sm">
               <Users size={16} className="text-green-500 mr-1 flex-shrink-0" />
-              <span className="text-gray-600 mr-1">Global Rank:</span>
+              <span className="text-gray-600 mr-1">Global Ranking:</span>
               <span className="font-medium">#{ranking}</span>
               <span className="text-gray-500 ml-1 hidden sm:inline">
                 of {totalUsers}

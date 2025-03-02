@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import Head from "next/head";
 import {
   Lesson,
   getAllLessonSlugs,
@@ -100,32 +101,48 @@ const LessonPage: NextPage<LessonPageProps> = ({ lesson }) => {
   // Show term learning module if prerequisites aren't met
   if (!termsPrereqsMet && requiredTerms.length > 0) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="text-sm font-medium text-blue-600 mb-1">
-          Terms to know
-        </div>
-        <h1 className="text-2xl font-bold mb-2">Before you begin: Key Terms</h1>
-        <p className="text-gray-600 mb-6">
-          Let's make sure you understand these important terms before starting
-          the lesson.
-        </p>
+      <>
+        <Head>
+          <title>
+            {lesson.title} | silvlearn - Learning through microlessons
+          </title>
+        </Head>
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          <div className="text-sm font-medium text-blue-600 mb-1">
+            Terms to know
+          </div>
+          <h1 className="text-2xl font-bold mb-2">
+            Before you begin: Key Terms
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Let's make sure you understand these important terms before starting
+            the lesson.
+          </p>
 
-        <TermLearningModule
-          requiredTerms={requiredTerms}
-          glossaryTerms={glossaryTerms}
-          userLearnedTerms={userCompletedTerms}
-          onTermsCompleted={handleTermsCompleted}
-        />
-      </div>
+          <TermLearningModule
+            requiredTerms={requiredTerms}
+            glossaryTerms={glossaryTerms}
+            userLearnedTerms={userCompletedTerms}
+            onTermsCompleted={handleTermsCompleted}
+          />
+        </div>
+      </>
     );
   }
 
   return (
-    <MicrolearningPlatform
-      lesson={lesson}
-      glossaryTerms={glossaryTerms}
-      userCompletedTerms={userCompletedTerms}
-    />
+    <>
+      <Head>
+        <title>
+          {lesson.title} | silvlearn - Learning through microlessons
+        </title>
+      </Head>
+      <MicrolearningPlatform
+        lesson={lesson}
+        glossaryTerms={glossaryTerms}
+        userCompletedTerms={userCompletedTerms}
+      />
+    </>
   );
 };
 

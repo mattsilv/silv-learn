@@ -71,10 +71,10 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
   return (
     <>
       <Head>
-        <title>silvlearn - Interactive Learning Platform</title>
+        <title>silvlearn - Learning through microlessons</title>
         <meta
           name="description"
-          content="silvlearn - Interactive microlearning platform"
+          content="silvlearn - Learning through microlessons. An interactive microlearning platform."
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
