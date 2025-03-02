@@ -1,0 +1,197 @@
+[
+  {
+    "id": 1,
+    "slug": "introduction-to-llms",
+    "title": "Introduction to Large Language Models (LLMs)",
+    "duration_minutes": 5,
+    "created_at": "2023-01-01T00:00:00Z",
+    "updated_at": "2023-01-01T00:00:00Z",
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What are Large Language Models?",
+            "text": "Large Language Models (LLMs) are advanced AI systems trained on vast amounts of text data. They learn patterns and relationships in language, enabling them to generate human-like text, translate languages, answer questions, and much more."
+          },
+          {
+            "title": "How LLMs Work",
+            "text": "LLMs are built on neural network architectures, particularly transformer models, which process text through multiple layers of attention mechanisms. During training, these models analyze billions of examples to understand grammar, facts, reasoning, and even some cultural context."
+          },
+          {
+            "title": "Key Capabilities",
+            "text": "Modern LLMs can write essays, summarize documents, generate creative content, code in various programming languages, and engage in nuanced conversations. Their abilities stem from understanding patterns rather than true comprehension, leading to both impressive results and occasional limitations."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=LLM+Architecture",
+          "alt": "Diagram showing LLM architecture with transformer layers",
+          "caption": "Figure 1: Simplified architecture of a Large Language Model"
+        }
+      },
+      "listening": {
+        "transcript": "Today we're exploring Large Language Models, or LLMs. These sophisticated AI systems have been trained on vast amounts of text from the internet, books, and other sources. Through this training, they learn patterns in language that allow them to generate remarkably human-like text. LLMs work through something called transformer architecture, which uses mechanisms called attention to process and understand relationships between words and concepts. What makes them so powerful is their ability to handle a wide range of tasks - from writing essays to answering questions, translating languages, or even generating code. Remember though, these models don't truly 'understand' language the way humans do. They recognize patterns extraordinarily well, which gives the appearance of understanding. This has implications for both their impressive capabilities and their limitations.",
+        "audio_url": "/audio/llm-introduction.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we're exploring how Large Language Models work and why they've become so transformative in AI. As you can see in this visualization, LLMs process language through layers of neural networks that build understanding from individual words to phrases to complete concepts.",
+        "video_url": "/videos/llm-introduction.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=LLM+Video",
+        "key_points": [
+          "LLMs are neural networks trained on massive text datasets",
+          "They use transformer architecture with attention mechanisms",
+          "Modern LLMs can perform diverse language tasks without specific training",
+          "They work by predicting what comes next in a sequence of text"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is the primary architecture used in modern LLMs?",
+          "options": [
+            "Convolutional Neural Networks",
+            "Recurrent Neural Networks",
+            "Transformer Architecture",
+            "Generative Adversarial Networks"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Modern LLMs primarily use Transformer Architecture, which relies on attention mechanisms to process relationships between all words in a sequence simultaneously."
+        },
+        {
+          "id": 2,
+          "question": "How do LLMs primarily learn language patterns?",
+          "options": [
+            "Through explicit programming of grammar rules",
+            "By being trained on large datasets of text",
+            "Through real-time human feedback only",
+            "By connecting to dictionaries and thesauri"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "LLMs learn language patterns by being trained on vast amounts of text data, allowing them to recognize patterns and relationships without explicit programming."
+        },
+        {
+          "id": 3,
+          "question": "Which of the following is NOT a typical capability of advanced LLMs?",
+          "options": [
+            "Answering questions based on learned information",
+            "Creating original creative content",
+            "Understanding context in conversations",
+            "Perfect factual accuracy in all domains"
+          ],
+          "correct_answer_index": 3,
+          "explanation": "While LLMs can perform many language tasks impressively, they don't guarantee perfect factual accuracy across all domains and can sometimes generate incorrect information."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "Machine Learning", "NLP"],
+      "difficulty_level": "beginner",
+      "prerequisites": []
+    }
+  },
+  {
+    "id": 2,
+    "slug": "prompt-engineering-basics",
+    "title": "Prompt Engineering Basics",
+    "duration_minutes": 8,
+    "created_at": "2023-01-15T00:00:00Z",
+    "updated_at": "2023-01-15T00:00:00Z",
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Prompt Engineering?",
+            "text": "Prompt engineering is the process of designing and refining inputs to AI language models to get the most effective outputs. It's a crucial skill for working with large language models (LLMs) like GPT-4, Claude, or Llama, as the quality and specificity of your prompts directly impact the quality of the responses you receive."
+          },
+          {
+            "title": "Core Principles",
+            "text": "Effective prompt engineering relies on clarity, specificity, and context. By providing clear instructions, relevant context, and specific requirements, you can guide the model to produce more accurate, useful, and appropriate responses. The goal is to bridge the gap between human intent and machine interpretation."
+          },
+          {
+            "title": "Common Techniques",
+            "text": "Some fundamental prompt engineering techniques include: role prompting (asking the AI to assume a specific role), few-shot learning (providing examples of desired outputs), chain-of-thought prompting (asking the model to explain its reasoning step by step), and using delimiters to separate instructions from content."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Prompt+Engineering",
+          "alt": "Diagram showing prompt engineering techniques",
+          "caption": "Figure 1: Common prompt engineering patterns and their effects"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to our lesson on prompt engineering. This is the art and science of crafting effective prompts for large language models. Think of prompts as instructions that guide AI behavior - the better your instructions, the better the results you'll get. Good prompt engineering starts with being clear about what you want. Instead of vague requests, be specific about format, style, length, and tone. Context matters too - providing background information helps the AI understand the full picture. Another powerful technique is role prompting, where you ask the AI to respond as if it were an expert in a particular field. For example, 'Respond as an experienced physics professor explaining quantum mechanics to a high school student.' You can also improve results by showing examples of what you want, a technique called few-shot learning. Remember that prompt engineering is iterative - you'll often need to refine your prompts based on the responses you receive.",
+        "audio_url": "/audio/prompt-engineering-basics.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we're exploring the fundamentals of prompt engineering and how it can dramatically improve your interactions with AI language models. As we demonstrate different prompting techniques, you'll see how the same underlying AI can produce vastly different outputs based solely on how the prompt is constructed.",
+        "video_url": "/videos/prompt-engineering-basics.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Prompt+Engineering+Video",
+        "key_points": [
+          "Prompt engineering is about communicating effectively with AI",
+          "Being specific and clear improves AI responses",
+          "Role prompting helps frame the AI's perspective",
+          "Few-shot learning demonstrates the desired output format",
+          "Chain-of-thought prompting improves reasoning in complex tasks"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is the primary goal of prompt engineering?",
+          "options": [
+            "To hack AI systems to reveal confidential information",
+            "To make AI systems run faster and more efficiently",
+            "To design inputs that elicit the most effective outputs from AI",
+            "To create new programming languages for AI development"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Prompt engineering focuses on designing and refining inputs to get the most effective, accurate, and useful outputs from AI language models."
+        },
+        {
+          "id": 2,
+          "question": "What is 'role prompting' in the context of prompt engineering?",
+          "options": [
+            "Asking the AI to assume a specific role or perspective",
+            "Rotating between different AI models for varied responses",
+            "Prompting the AI at specific time intervals",
+            "Assigning different roles to team members who work with AI"
+          ],
+          "correct_answer_index": 0,
+          "explanation": "Role prompting involves asking the AI to respond as if it were a specific type of expert or had a particular perspective, which can help frame the response appropriately."
+        },
+        {
+          "id": 3,
+          "question": "Which of the following is NOT typically considered a best practice in prompt engineering?",
+          "options": [
+            "Providing clear and specific instructions",
+            "Including relevant context",
+            "Using vague, open-ended questions to encourage creativity",
+            "Breaking complex tasks into smaller steps"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "While vague questions might occasionally be useful for brainstorming, they generally lead to unfocused or irrelevant responses. Best practices in prompt engineering emphasize clarity and specificity."
+        },
+        {
+          "id": 4,
+          "question": "What is 'few-shot learning' in prompt engineering?",
+          "options": [
+            "Training an AI on very small datasets",
+            "Providing examples of desired outputs in the prompt",
+            "Limiting the AI to only a few responses",
+            "Using multiple AI models simultaneously"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Few-shot learning involves providing examples of the desired input-output pairs within the prompt, which helps the AI understand the expected format and style of response."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "Prompt Engineering", "LLM"],
+      "difficulty_level": "intermediate",
+      "prerequisites": ["Introduction to Large Language Models (LLMs)"]
+    }
+  }
+]
