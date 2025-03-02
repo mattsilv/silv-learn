@@ -50,6 +50,8 @@ export type Lesson = {
   duration_minutes: number;
   created_at: string;
   updated_at: string;
+  topic: string;
+  level: number;
   required_terms?: string[];
   learning_styles: LearningStyles;
   quiz: {
@@ -95,4 +97,96 @@ export const getLessonBySlug = async (slug: string): Promise<Lesson | null> => {
 export const getAllLessonSlugs = async (): Promise<string[]> => {
   const lessons = await getAllLessons();
   return lessons.map((lesson) => lesson.slug);
+};
+
+/**
+ * Get all available topics
+ */
+export const getAllTopics = async (): Promise<string[]> => {
+  const lessons = await getAllLessons();
+  const topicsSet = new Set(lessons.map((lesson) => lesson.topic));
+  return Array.from(topicsSet);
+};
+
+/**
+ * Get lessons by topic
+ */
+export const getLessonsByTopic = async (topic: string): Promise<Lesson[]> => {
+  const lessons = await getAllLessons();
+  return lessons.filter((lesson) => lesson.topic === topic);
+};
+
+/**
+ * Get lessons by topic and level
+ */
+export const getLessonsByTopicAndLevel = async (
+  topic: string,
+  level: number
+): Promise<Lesson[]> => {
+  const lessons = await getLessonsByTopic(topic);
+  return lessons.filter((lesson) => lesson.level === level);
+};
+
+/**
+ * Check if user has completed all lessons for a specific level in a topic
+ */
+export const hasCompletedLevelForTopic = async (
+  topic: string,
+  level: number,
+  completedLessonIds: string[]
+): Promise<boolean> => {
+  const lessons = await getLessonsByTopicAndLevel(topic, level);
+
+  // If there are no lessons at this level, consider it complete
+  if (lessons.length === 0) {
+    return true;
+  }
+
+  // Check if all lessons at this level have been completed
+  return lessons.every((lesson) =>
+    completedLessonIds.includes(lesson.id.toString())
+  );
+};
+
+/**
+ * Get the highest available level for a topic based on user's progress
+ */
+export const getHighestAvailableLevelForTopic = async (
+  topic: string,
+  completedLessonIds: string[]
+): Promise<number> => {
+  const lessons = await getLessonsByTopic(topic);
+  const levelsArray = lessons.map((lesson) => lesson.level);
+  const uniqueLevels = Array.from(new Set(levelsArray)).sort((a, b) => a - b);
+
+  // Always allow level 100 courses
+  if (uniqueLevels.length === 0 || !uniqueLevels.includes(100)) {
+    return 100;
+  }
+
+  // Find the highest level where all previous levels are completed
+  let highestAvailableLevel = 100;
+
+  for (let i = 0; i < uniqueLevels.length; i++) {
+    const currentLevel = uniqueLevels[i];
+
+    // Skip level 100 as it's always available
+    if (currentLevel === 100) continue;
+
+    // Check if previous level is completed
+    const previousLevel = uniqueLevels[i - 1] || 100;
+    const previousLevelCompleted = await hasCompletedLevelForTopic(
+      topic,
+      previousLevel,
+      completedLessonIds
+    );
+
+    if (previousLevelCompleted) {
+      highestAvailableLevel = currentLevel;
+    } else {
+      break;
+    }
+  }
+
+  return highestAvailableLevel;
 };

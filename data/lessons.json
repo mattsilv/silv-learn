@@ -6,6 +6,8 @@
     "duration_minutes": 5,
     "created_at": "2023-01-01T00:00:00Z",
     "updated_at": "2023-01-01T00:00:00Z",
+    "topic": "AI",
+    "level": 200,
     "required_terms": ["ai", "nlp", "machine-learning", "neural-network"],
     "learning_styles": {
       "reading": {
@@ -98,6 +100,8 @@
     "duration_minutes": 8,
     "created_at": "2023-01-15T00:00:00Z",
     "updated_at": "2023-01-15T00:00:00Z",
+    "topic": "AI",
+    "level": 200,
     "required_terms": ["llm", "ai", "prompt-engineering", "generative-ai"],
     "learning_styles": {
       "reading": {
@@ -203,6 +207,8 @@
     "duration_minutes": 6,
     "created_at": "2023-01-05T00:00:00Z",
     "updated_at": "2023-01-05T00:00:00Z",
+    "topic": "AI",
+    "level": 100,
     "required_terms": ["ai"],
     "learning_styles": {
       "reading": {
@@ -296,6 +302,8 @@
     "duration_minutes": 7,
     "created_at": "2023-01-08T00:00:00Z",
     "updated_at": "2023-01-08T00:00:00Z",
+    "topic": "AI",
+    "level": 100,
     "required_terms": ["ai", "machine-learning"],
     "learning_styles": {
       "reading": {
@@ -401,6 +409,8 @@
     "duration_minutes": 8,
     "created_at": "2023-01-12T00:00:00Z",
     "updated_at": "2023-01-12T00:00:00Z",
+    "topic": "AI",
+    "level": 300,
     "required_terms": [
       "ai",
       "nlp",
@@ -513,6 +523,8 @@
     "duration_minutes": 6,
     "created_at": "2023-02-01T00:00:00Z",
     "updated_at": "2023-02-01T00:00:00Z",
+    "topic": "AI",
+    "level": 200,
     "required_terms": [
       "ai",
       "machine-learning",
@@ -628,6 +640,8 @@
     "duration_minutes": 9,
     "created_at": "2023-01-10T00:00:00Z",
     "updated_at": "2023-01-10T00:00:00Z",
+    "topic": "AI",
+    "level": 200,
     "required_terms": [
       "ai",
       "machine-learning",
@@ -729,6 +743,101 @@
       "tags": ["AI", "Deep Learning", "Neural Networks", "Machine Learning"],
       "difficulty_level": "intermediate",
       "prerequisites": ["machine-learning-basics", "ai-fundamentals"]
+    }
+  },
+  {
+    "id": 8,
+    "slug": "quantum-computing-introduction",
+    "title": "Introduction to Quantum Computing",
+    "duration_minutes": 7,
+    "created_at": "2023-03-01T00:00:00Z",
+    "updated_at": "2023-03-01T00:00:00Z",
+    "topic": "Quantum Computing",
+    "level": 100,
+    "required_terms": ["quantum", "computing"],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Quantum Computing?",
+            "text": "Quantum computing is a rapidly emerging technology that harnesses the unique properties of quantum mechanics to process information in ways that classical computers cannot. Unlike classical bits, which can be either 0 or 1, quantum bits (qubits) can exist in multiple states simultaneously through a phenomenon called superposition."
+          },
+          {
+            "title": "Key Quantum Concepts",
+            "text": "Quantum computing relies on several fundamental concepts: superposition (the ability of qubits to exist in multiple states simultaneously), entanglement (the correlation between qubits regardless of distance), and interference (the ability to amplify correct answers and reduce incorrect ones). These properties give quantum computers unique advantages for certain types of problems."
+          },
+          {
+            "title": "Potential Applications",
+            "text": "Quantum computers show promise for revolutionizing fields such as cryptography, drug discovery, materials science, and optimization problems. While still in early stages of development, quantum computers could eventually tackle problems that would take classical computers millions of years to solve."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Quantum+Computing",
+          "alt": "Visual representation of quantum computing principles",
+          "caption": "Figure 1: Visual comparison between classical bits and quantum bits (qubits)"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to our introduction to quantum computing. Quantum computing represents a fundamental shift in how we process information, leveraging the strange and counterintuitive properties of quantum mechanics. While classical computers use bits that are either 0 or 1, quantum computers use quantum bits, or qubits, which can exist in multiple states simultaneously through a property called superposition. Additionally, qubits can be entangled, meaning the state of one qubit can be dependent on the state of another, regardless of the distance between them. These properties give quantum computers unique capabilities for solving certain types of problems that would be practically impossible for classical computers to tackle. Current quantum computers are still in their early stages, with relatively few qubits and significant challenges related to error rates and maintaining quantum states. However, as the technology advances, quantum computing could revolutionize fields such as cryptography, drug discovery, and complex system simulation.",
+        "audio_url": "/audio/quantum-computing-introduction.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we'll explore the fascinating world of quantum computing, looking at how it differs from classical computing and the revolutionary potential it holds for solving complex problems.",
+        "video_url": "/videos/quantum-computing-introduction.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Quantum+Computing+Video",
+        "key_points": [
+          "Quantum computing uses qubits that can exist in multiple states simultaneously",
+          "Superposition and entanglement are key quantum mechanical properties",
+          "Quantum computers excel at specific types of complex problems",
+          "Current quantum computers are still limited but rapidly advancing",
+          "Potential applications include cryptography, drug discovery, and optimization"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is a fundamental difference between classical bits and qubits?",
+          "options": [
+            "Qubits are smaller than classical bits",
+            "Qubits can only store 0s, not 1s",
+            "Qubits can exist in multiple states simultaneously through superposition",
+            "Qubits operate at room temperature while classical bits require cooling"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Unlike classical bits that must be either 0 or 1, qubits can exist in a superposition of states, meaning they can represent 0, 1, or any quantum combination of these states simultaneously."
+        },
+        {
+          "id": 2,
+          "question": "What is quantum entanglement?",
+          "options": [
+            "The cooling system used in quantum computers",
+            "The correlation between qubits regardless of distance",
+            "The process of programming quantum algorithms",
+            "The speed at which quantum computers operate"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Quantum entanglement is a phenomenon where qubits become correlated in such a way that the quantum state of each qubit cannot be described independently of the others, regardless of the distance separating them."
+        },
+        {
+          "id": 3,
+          "question": "Which of the following is NOT a major potential application of quantum computing?",
+          "options": [
+            "Breaking current encryption methods",
+            "Discovering new pharmaceutical drugs",
+            "Creating more efficient social media platforms",
+            "Simulating complex quantum systems"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "While quantum computing has potential applications in cryptography, drug discovery, and complex simulations, it doesn't offer significant advantages for typical social media platform operations, which can be handled efficiently by classical computers."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["Quantum", "Computing", "Physics", "Technology"],
+      "difficulty_level": "beginner",
+      "prerequisites": []
     }
   }
 ]

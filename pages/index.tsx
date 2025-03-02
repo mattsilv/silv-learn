@@ -1,9 +1,22 @@
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import Head from "next/head";
-import { Book, CheckCircle, BookOpen, Trophy, Star } from "lucide-react";
-import { getAllLessons } from "../utils/lessonService";
-import type { Lesson } from "../utils/lessonService";
+import {
+  CheckCircle,
+  BookOpen,
+  Trophy,
+  Star,
+  Lock,
+  Book,
+  ChevronRight,
+} from "lucide-react";
+import {
+  getAllLessons,
+  getAllTopics,
+  getLessonsByTopic,
+  getHighestAvailableLevelForTopic,
+  Lesson,
+} from "../utils/lessonService";
 import { getAllTerms } from "../utils/glossaryService";
 import { getUserProgress } from "../utils/userProgressService";
 import { useState, useEffect } from "react";
@@ -12,15 +25,25 @@ import LoginButton from "../components/LoginButton";
 
 type HomeProps = {
   lessons: Lesson[];
+  topics: string[];
 };
 
-const Home: NextPage<HomeProps> = ({ lessons }) => {
+const Home: NextPage<HomeProps> = ({ lessons, topics }) => {
   const [userCompletedTerms, setUserCompletedTerms] = useState<string[]>([]);
-  const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
-  const [loading, setLoading] = useState(true);
   const [userCompletedLessons, setUserCompletedLessons] = useState<string[]>(
     []
   );
+  const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [topicLessons, setTopicLessons] = useState<{ [key: string]: Lesson[] }>(
+    {}
+  );
+  const [highestAvailableLevels, setHighestAvailableLevels] = useState<{
+    [key: string]: number;
+  }>({});
+  const [expandedTopics, setExpandedTopics] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,6 +57,31 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
         setUserCompletedTerms(userProgress.completedTerms || []);
         setUserCompletedLessons(userProgress.completedLessons || []);
 
+        // Organize lessons by topic
+        const lessonsByTopic: { [key: string]: Lesson[] } = {};
+        for (const topic of topics) {
+          const topicLessons = await getLessonsByTopic(topic);
+          lessonsByTopic[topic] = topicLessons;
+
+          // Set all topics to be expanded by default
+          setExpandedTopics((prev) => ({
+            ...prev,
+            [topic]: true,
+          }));
+
+          // Get highest available level for each topic
+          const highestLevel = await getHighestAvailableLevelForTopic(
+            topic,
+            userProgress.completedLessons || []
+          );
+
+          setHighestAvailableLevels((prev) => ({
+            ...prev,
+            [topic]: highestLevel,
+          }));
+        }
+
+        setTopicLessons(lessonsByTopic);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -42,7 +90,15 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
     };
 
     fetchUserData();
-  }, []);
+  }, [topics]);
+
+  // Toggle a topic's expanded state
+  const toggleTopic = (topic: string) => {
+    setExpandedTopics((prev) => ({
+      ...prev,
+      [topic]: !prev[topic],
+    }));
+  };
 
   // Get term display name by ID
   const getTermNameById = (termId: string): string => {
@@ -65,6 +121,17 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
     return grouped;
   };
 
+  // Check if a lesson is accessible based on its level
+  const isLessonAccessible = (topic: string, level: number): boolean => {
+    if (level === 100) return true; // Level 100 courses are always accessible
+    return level <= (highestAvailableLevels[topic] || 100);
+  };
+
+  // Format level for display (e.g., 100 -> "100-level")
+  const formatLevel = (level: number): string => {
+    return `${level}-level`;
+  };
+
   const groupedTerms = !loading ? groupTermsByFirstLetter() : {};
   const sortedLetters = Object.keys(groupedTerms).sort();
 
@@ -85,7 +152,7 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900">
-                Available Lessons
+                Learning Paths
               </h1>
               {!loading && (
                 <div className="flex items-center text-sm">
@@ -98,84 +165,198 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {lessons.map((lesson) => {
-                const isCompleted =
-                  !loading &&
-                  userCompletedLessons.includes(lesson.id.toString());
-                return (
-                  <Link
-                    href={`/lessons/${lesson.slug}`}
-                    key={lesson.id}
-                    className={`bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow ${
-                      isCompleted ? "border-l-4 border-green-500" : ""
-                    }`}
+            {loading ? (
+              <div className="text-center py-12">Loading lessons...</div>
+            ) : (
+              <div className="space-y-10">
+                {topics.map((topic) => (
+                  <div
+                    key={topic}
+                    className="bg-white rounded-lg shadow-sm overflow-hidden"
                   >
-                    <div className="p-6">
-                      <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                        {lesson.title}
+                    <button
+                      onClick={() => toggleTopic(topic)}
+                      className="w-full flex justify-between items-center p-4 bg-gray-50 border-b border-gray-200 focus:outline-none"
+                    >
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        {topic}
                       </h2>
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <span className="bg-blue-100 rounded-full px-2 py-1 text-xs font-medium text-blue-800">
-                            {lesson.duration_minutes} min
-                          </span>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {lesson.metadata.difficulty_level}
-                        </div>
-                      </div>
+                      <ChevronRight
+                        className={`h-5 w-5 text-gray-500 transform transition-transform duration-200 ${
+                          expandedTopics[topic] ? "rotate-90" : ""
+                        }`}
+                      />
+                    </button>
 
-                      {isCompleted && (
-                        <div className="mt-2">
-                          <span className="inline-flex items-center text-sm text-green-600">
-                            <CheckCircle size={14} className="mr-1" />
-                            Completed
-                          </span>
-                        </div>
-                      )}
+                    {expandedTopics[topic] && (
+                      <div className="p-4">
+                        {/* Group lessons by level */}
+                        {[100, 200, 300].map((level) => {
+                          const levelLessons =
+                            topicLessons[topic]?.filter(
+                              (lesson) => lesson.level === level
+                            ) || [];
 
-                      {!loading &&
-                        lesson.required_terms &&
-                        lesson.required_terms.length > 0 && (
-                          <div className="mt-4 border-t pt-3">
-                            <div className="text-sm text-gray-600 mb-1">
-                              Required terms:
-                            </div>
-                            <div className="space-y-1">
-                              {lesson.required_terms.map((termId) => {
-                                const isCompleted =
-                                  userCompletedTerms.includes(termId);
-                                return (
-                                  <div
-                                    key={termId}
-                                    className="flex items-center text-sm"
-                                  >
-                                    {isCompleted ? (
-                                      <CheckCircle className="text-green-500 h-4 w-4 mr-1 flex-shrink-0" />
-                                    ) : (
-                                      <div className="h-4 w-4 rounded-full border border-gray-300 mr-1 flex-shrink-0"></div>
-                                    )}
-                                    <span
-                                      className={
-                                        isCompleted
-                                          ? "text-green-600"
-                                          : "text-gray-600"
-                                      }
-                                    >
-                                      {getTermNameById(termId)}
+                          if (levelLessons.length === 0) return null;
+
+                          const isAccessible = isLessonAccessible(topic, level);
+
+                          return (
+                            <div
+                              key={`${topic}-${level}`}
+                              className="mb-6 last:mb-0"
+                            >
+                              <div className="flex items-center mb-3">
+                                <Book
+                                  size={18}
+                                  className={`mr-2 ${
+                                    isAccessible
+                                      ? "text-blue-600"
+                                      : "text-gray-400"
+                                  }`}
+                                />
+                                <h3
+                                  className={`text-lg font-medium ${
+                                    isAccessible
+                                      ? "text-gray-900"
+                                      : "text-gray-400"
+                                  }`}
+                                >
+                                  {formatLevel(level)}
+                                  {!isAccessible && (
+                                    <span className="ml-2 inline-flex items-center">
+                                      <Lock size={14} className="mr-1" />
+                                      <span className="text-sm">
+                                        Complete lower levels first
+                                      </span>
                                     </span>
-                                  </div>
-                                );
-                              })}
+                                  )}
+                                </h3>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {levelLessons.map((lesson) => {
+                                  const isCompleted =
+                                    userCompletedLessons.includes(
+                                      lesson.id.toString()
+                                    );
+
+                                  return (
+                                    <Link
+                                      href={
+                                        isAccessible
+                                          ? `/lessons/${lesson.slug}`
+                                          : "#"
+                                      }
+                                      key={lesson.id}
+                                      className={`block bg-white rounded-lg border ${
+                                        isCompleted
+                                          ? "border-l-4 border-green-500"
+                                          : isAccessible
+                                          ? "border border-gray-200 hover:border-blue-300 hover:shadow-sm"
+                                          : "border border-gray-200 opacity-60 cursor-not-allowed"
+                                      } overflow-hidden transition-all`}
+                                      onClick={(e) => {
+                                        if (!isAccessible) {
+                                          e.preventDefault();
+                                        }
+                                      }}
+                                    >
+                                      <div className="p-4">
+                                        <h4
+                                          className={`text-base font-medium mb-2 ${
+                                            isAccessible
+                                              ? "text-gray-900"
+                                              : "text-gray-500"
+                                          }`}
+                                        >
+                                          {lesson.title}
+                                        </h4>
+                                        <div className="flex items-center justify-between mt-3">
+                                          <div className="flex items-center text-sm text-gray-500">
+                                            <span
+                                              className={`rounded-full px-2 py-1 text-xs font-medium ${
+                                                isAccessible
+                                                  ? "bg-blue-100 text-blue-800"
+                                                  : "bg-gray-100 text-gray-600"
+                                              }`}
+                                            >
+                                              {lesson.duration_minutes} min
+                                            </span>
+                                          </div>
+                                          <div className="text-sm text-gray-500">
+                                            {lesson.metadata.difficulty_level}
+                                          </div>
+                                        </div>
+
+                                        {isCompleted && (
+                                          <div className="mt-2">
+                                            <span className="inline-flex items-center text-sm text-green-600">
+                                              <CheckCircle
+                                                size={14}
+                                                className="mr-1"
+                                              />
+                                              Completed
+                                            </span>
+                                          </div>
+                                        )}
+
+                                        {!loading &&
+                                          lesson.required_terms &&
+                                          lesson.required_terms.length > 0 && (
+                                            <div className="mt-3 border-t pt-3">
+                                              <div className="text-sm text-gray-600 mb-1">
+                                                Required terms:
+                                              </div>
+                                              <div className="space-y-1">
+                                                {lesson.required_terms.map(
+                                                  (termId) => {
+                                                    const isTermCompleted =
+                                                      userCompletedTerms.includes(
+                                                        termId
+                                                      );
+                                                    return (
+                                                      <div
+                                                        key={termId}
+                                                        className="flex items-center text-sm"
+                                                      >
+                                                        {isTermCompleted ? (
+                                                          <CheckCircle className="text-green-500 h-4 w-4 mr-1 flex-shrink-0" />
+                                                        ) : (
+                                                          <div className="h-4 w-4 rounded-full border border-gray-300 mr-1 flex-shrink-0"></div>
+                                                        )}
+                                                        <span
+                                                          className={
+                                                            isTermCompleted
+                                                              ? "text-green-600"
+                                                              : "text-gray-600"
+                                                          }
+                                                        >
+                                                          {getTermNameById(
+                                                            termId
+                                                          )}
+                                                        </span>
+                                                      </div>
+                                                    );
+                                                  }
+                                                )}
+                                              </div>
+                                            </div>
+                                          )}
+                                      </div>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Glossary Terms Section */}
             <div className="mt-16">
@@ -239,20 +420,20 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
                                       : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
                                   } transition-colors`}
                                 >
-                                  {isCompleted && (
+                                  {isCompleted ? (
                                     <CheckCircle className="text-green-500 h-4 w-4 mr-2 flex-shrink-0" />
+                                  ) : (
+                                    <div className="h-4 w-4 rounded-full border border-gray-300 mr-2 flex-shrink-0"></div>
                                   )}
-                                  <div>
-                                    <div className="font-medium">
-                                      {term.term}
-                                    </div>
-                                    {term.full_form &&
-                                      term.full_form !== term.term && (
-                                        <div className="text-xs text-gray-500">
-                                          {term.full_form}
-                                        </div>
-                                      )}
-                                  </div>
+                                  <span
+                                    className={
+                                      isCompleted
+                                        ? "text-green-700 font-medium"
+                                        : "text-gray-700"
+                                    }
+                                  >
+                                    {term.term}
+                                  </span>
                                 </Link>
                               );
                             })}
@@ -271,14 +452,16 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
   );
 };
 
-// Get static props to load all lesson data
 export const getStaticProps: GetStaticProps = async () => {
   const lessons = await getAllLessons();
+  const topics = await getAllTopics();
 
   return {
     props: {
       lessons,
+      topics,
     },
+    revalidate: 60, // Revalidate every 60 seconds
   };
 };
 
