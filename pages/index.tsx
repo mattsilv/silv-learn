@@ -301,7 +301,29 @@ const Home: NextPage<HomeProps> = ({ lessons, topics }) => {
                                           </div>
                                         )}
 
-                                        {!loading &&
+                                        {/* For locked lessons, show a simplified preview with lock icon */}
+                                        {!isAccessible && (
+                                          <>
+                                            <p className="text-sm text-gray-400 mt-2">
+                                              {lesson.short_description}
+                                            </p>
+                                            <div className="mt-3 pt-2 border-t border-gray-100">
+                                              <div className="flex items-center text-sm text-gray-400">
+                                                <Lock
+                                                  size={12}
+                                                  className="mr-1"
+                                                />
+                                                <span>
+                                                  Complete lower level courses
+                                                  to unlock
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </>
+                                        )}
+
+                                        {isAccessible &&
+                                          !loading &&
                                           lesson.required_terms &&
                                           lesson.required_terms.length > 0 && (
                                             <div className="mt-3 border-t pt-3">

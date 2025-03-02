@@ -47,6 +47,7 @@ export type Lesson = {
   id: number;
   slug: string;
   title: string;
+  short_description: string;
   duration_minutes: number;
   created_at: string;
   updated_at: string;
