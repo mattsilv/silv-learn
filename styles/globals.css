@@ -10,3 +10,40 @@
     @apply bg-gray-50;
   }
 }
+
+/* Term highlighting styles */
+.term-highlight {
+  border-bottom: 1px dotted #3b82f6;
+  color: #2563eb;
+  cursor: help;
+  position: relative;
+}
+
+.manual-term {
+  font-weight: 500;
+  border-bottom: 1px solid #3b82f6;
+}
+
+/* Term tooltip styling */
+.term-tooltip {
+  position: absolute;
+  z-index: 50;
+  max-width: 300px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  transform: translateY(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.term-highlight:hover .term-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}

@@ -50,6 +50,7 @@ export type Lesson = {
   duration_minutes: number;
   created_at: string;
   updated_at: string;
+  required_terms?: string[];
   learning_styles: LearningStyles;
   quiz: {
     questions: QuizQuestion[];

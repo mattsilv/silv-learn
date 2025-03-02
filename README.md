@@ -1,6 +1,6 @@
 # MicroLearn Platform
 
-A Next.js microlearning platform supporting multiple learning styles (reading, listening, watching) with interactive quizzes.
+A Next.js microlearning platform supporting multiple learning styles (reading, listening, watching) with interactive quizzes and an integrated terminology system.
 
 ## Features
 
@@ -8,6 +8,8 @@ A Next.js microlearning platform supporting multiple learning styles (reading, l
 - Interactive quizzes
 - Responsive design
 - JSON-based mock data structure
+- Smart terminology system with hover definitions
+- Term prerequisites verification before lessons
 
 ## Tech Stack
 
@@ -19,6 +21,9 @@ A Next.js microlearning platform supporting multiple learning styles (reading, l
 
 ## Recent Changes
 
+- Implemented comprehensive glossary/terminology system
+- Created term highlighting and hover definitions
+- Added term prerequisite verification for lessons
 - Moved hardcoded lesson data to JSON files in `data/lessons.json`
 - Created database schema design in `data/README.md`
 - Added utility service (`utils/lessonService.ts`) for data operations
@@ -32,6 +37,8 @@ Currently using JSON mock data with a structure designed for future PostgreSQL m
 - Lessons with metadata (id, slug, title, duration)
 - Learning styles content (reading, listening, watching)
 - Quiz questions with answers and explanations
+- Glossary terms with definitions, aliases, and relationships
+- User progress tracking for completed terms
 
 ## Future Plans
 
@@ -39,6 +46,7 @@ Currently using JSON mock data with a structure designed for future PostgreSQL m
 - User progress tracking
 - More interactive learning elements
 - Search functionality
+- Advanced terminology visualization
 
 ## Getting Started
 
@@ -102,7 +110,10 @@ docker run -i --rm --init -e DOCKER_CONTAINER=true mcp/puppeteer
 ```
 silv-learn/
 ├── components/
-│   └── MicrolearningPlatform.tsx  # Main component for the learning platform UI
+│   ├── MicrolearningPlatform.tsx  # Main component for the learning platform UI
+│   ├── TermHighlighter.tsx        # Component for highlighting terms with hover definitions
+│   ├── TermLearningModule.tsx     # Component for learning required terms
+│   └── TermVerificationQuestion.tsx # Component for verifying term understanding
 ├── pages/
 │   ├── _app.tsx                   # Next.js app wrapper
 │   ├── index.tsx                  # Homepage with lesson listings
@@ -110,9 +121,16 @@ silv-learn/
 │       └── [slug].tsx             # Dynamic lesson page that renders content based on slug
 ├── data/
 │   ├── README.md                  # Database schema design documentation
-│   └── lessons.json               # Mock lesson data with content and quizzes
+│   ├── lessons.json               # Mock lesson data with content and quizzes
+│   └── glossary.json              # Glossary terms with definitions and relationships
 ├── utils/
-│   └── lessonService.ts           # Service for fetching and processing lesson data
+│   ├── lessonService.ts           # Service for fetching and processing lesson data
+│   ├── glossaryService.ts         # Service for managing glossary terms
+│   ├── termDetectionService.ts    # Service for detecting and highlighting terms in content
+│   └── userProgressService.ts     # Service for tracking user term completion
+├── types/
+│   ├── glossary.ts                # TypeScript interfaces for glossary terms
+│   └── userProgress.ts            # TypeScript interfaces for user progress tracking
 ├── styles/                        # Global styles and Tailwind configuration
 ├── public/                        # Static assets
 └── .cursor/
@@ -122,7 +140,12 @@ silv-learn/
 ### Key Files
 
 - **components/MicrolearningPlatform.tsx**: Core UI component that handles rendering different learning styles and quiz interactions
-- **pages/lessons/[slug].tsx**: Dynamic routing for individual lesson pages
+- **components/TermHighlighter.tsx**: Component that detects and highlights terms in content with hover definitions
+- **components/TermLearningModule.tsx**: Component for learning required terms before accessing lessons
+- **pages/lessons/[slug].tsx**: Dynamic routing for individual lesson pages with term prerequisite checks
 - **utils/lessonService.ts**: Handles data fetching, filtering, and processing for lessons
+- **utils/glossaryService.ts**: Manages glossary term retrieval and verification
+- **utils/termDetectionService.ts**: Processes text to detect and highlight terms
 - **data/lessons.json**: Structured mock data that simulates database content
+- **data/glossary.json**: Glossary terms with definitions, aliases, and relationships
 - **data/README.md**: Documentation for database schema design and future implementation plans
