@@ -6,7 +6,7 @@
     "duration_minutes": 5,
     "created_at": "2023-01-01T00:00:00Z",
     "updated_at": "2023-01-01T00:00:00Z",
-    "required_terms": ["ai", "nlp"],
+    "required_terms": ["ai", "nlp", "machine-learning", "neural-network"],
     "learning_styles": {
       "reading": {
         "content": [
@@ -86,9 +86,9 @@
       ]
     },
     "metadata": {
-      "tags": ["AI", "Machine Learning", "NLP"],
+      "tags": ["AI", "Machine Learning", "NLP", "LLM"],
       "difficulty_level": "beginner",
-      "prerequisites": []
+      "prerequisites": ["ai-fundamentals", "machine-learning-basics"]
     }
   },
   {
@@ -98,6 +98,7 @@
     "duration_minutes": 8,
     "created_at": "2023-01-15T00:00:00Z",
     "updated_at": "2023-01-15T00:00:00Z",
+    "required_terms": ["llm", "ai", "prompt-engineering", "generative-ai"],
     "learning_styles": {
       "reading": {
         "content": [
@@ -192,7 +193,542 @@
     "metadata": {
       "tags": ["AI", "Prompt Engineering", "LLM"],
       "difficulty_level": "intermediate",
-      "prerequisites": ["Introduction to Large Language Models (LLMs)"]
+      "prerequisites": ["introduction-to-llms"]
+    }
+  },
+  {
+    "id": 3,
+    "slug": "ai-fundamentals",
+    "title": "AI Fundamentals",
+    "duration_minutes": 6,
+    "created_at": "2023-01-05T00:00:00Z",
+    "updated_at": "2023-01-05T00:00:00Z",
+    "required_terms": ["ai"],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Artificial Intelligence?",
+            "text": "Artificial Intelligence (AI) refers to computer systems designed to perform tasks that typically require human intelligence. These include visual perception, speech recognition, decision-making, language translation, and problem-solving. Modern AI has transformed from simple rule-based systems to sophisticated learning algorithms."
+          },
+          {
+            "title": "Types of AI",
+            "text": "AI can be categorized as narrow or general. Narrow AI (also called weak AI) is designed for specific tasks, like voice assistants or recommendation systems. General AI (strong AI) would have human-like intelligence across multiple domains, but this remains theoretical. Most AI systems today are examples of narrow AI."
+          },
+          {
+            "title": "Key Approaches in AI",
+            "text": "Several approaches drive modern AI development. Machine learning enables systems to learn from data without explicit programming. Knowledge-based systems use rules and logic. Natural language processing focuses on human language interaction. Computer vision processes and interprets visual information. Each approach has specific applications and strengths."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=AI+Fundamentals",
+          "alt": "Diagram showing different branches of AI",
+          "caption": "Figure 1: Major branches and approaches in artificial intelligence"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to AI Fundamentals. Artificial Intelligence, or AI, is a broad field focused on creating computer systems that can perform tasks normally requiring human intelligence. While popular culture often portrays AI as sentient robots, the reality is both more practical and more fascinating. Today's AI systems excel at specific tasks rather than general intelligence. They power the voice assistants on your phone, recommend products as you shop online, filter spam from your email, and increasingly help doctors diagnose diseases. At its core, modern AI is driven by various approaches, with machine learning being particularly transformative. Rather than following pre-programmed rules, machine learning systems identify patterns in data to improve their performance over time. This has enabled breakthroughs in everything from language translation to cancer detection.",
+        "audio_url": "/audio/ai-fundamentals.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we're exploring the fundamental concepts of artificial intelligence. We'll look at what AI actually is, the different types of AI systems, and how they're transforming our world today.",
+        "video_url": "/videos/ai-fundamentals.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=AI+Fundamentals+Video",
+        "key_points": [
+          "AI enables computers to perform tasks typically requiring human intelligence",
+          "Modern AI applications include voice assistants, image recognition, and recommendation systems",
+          "Narrow AI focuses on specific tasks, while general AI remains theoretical",
+          "Machine learning is a key approach that allows systems to learn from data",
+          "AI development involves considerations of ethics and responsible implementation"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is the difference between narrow AI and general AI?",
+          "options": [
+            "Narrow AI is slower than general AI",
+            "Narrow AI is designed for specific tasks, while general AI has human-like intelligence across domains",
+            "Narrow AI doesn't use machine learning, while general AI does",
+            "Narrow AI is theoretical, while general AI is widely implemented"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Narrow AI (weak AI) is designed for specific tasks like voice recognition, while general AI (strong AI) would have human-like intelligence across multiple domains but remains largely theoretical."
+        },
+        {
+          "id": 2,
+          "question": "Which of the following is NOT a common approach in modern AI?",
+          "options": [
+            "Machine Learning",
+            "Natural Language Processing",
+            "Computer Vision",
+            "Telepathic Data Transfer"
+          ],
+          "correct_answer_index": 3,
+          "explanation": "Machine Learning, Natural Language Processing, and Computer Vision are all established approaches in AI. Telepathic Data Transfer is not a real AI technology."
+        },
+        {
+          "id": 3,
+          "question": "Which statement best describes modern AI systems?",
+          "options": [
+            "They possess consciousness and self-awareness",
+            "They follow fixed rules that cannot be updated",
+            "They perform specific tasks through pattern recognition and data analysis",
+            "They all require supercomputers to operate"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Modern AI systems excel at specific tasks by recognizing patterns in data. They don't possess consciousness, can update their behavior through learning, and many can run on standard computers or even smartphones."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "Artificial Intelligence", "Technology"],
+      "difficulty_level": "beginner",
+      "prerequisites": []
+    }
+  },
+  {
+    "id": 4,
+    "slug": "machine-learning-basics",
+    "title": "Machine Learning Basics",
+    "duration_minutes": 7,
+    "created_at": "2023-01-08T00:00:00Z",
+    "updated_at": "2023-01-08T00:00:00Z",
+    "required_terms": ["ai", "machine-learning"],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Machine Learning?",
+            "text": "Machine Learning is a subset of artificial intelligence that gives computers the ability to learn from data without being explicitly programmed. Rather than following fixed rules, machine learning algorithms identify patterns and make decisions with minimal human intervention, improving their performance as they process more data."
+          },
+          {
+            "title": "Key Types of Machine Learning",
+            "text": "There are three main types of machine learning: Supervised learning uses labeled data to train models that can make predictions. Unsupervised learning identifies patterns in unlabeled data. Reinforcement learning trains models through a system of rewards and penalties. Each approach serves different purposes and works best for different types of problems."
+          },
+          {
+            "title": "How Machine Learning Works",
+            "text": "Machine learning starts with data collection, followed by data preparation and cleaning. Next, a suitable algorithm is selected and trained on the data. The model's performance is evaluated and fine-tuned, and finally deployed to make predictions on new data. This process is often iterative, with models regularly updated to maintain or improve accuracy."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Machine+Learning+Types",
+          "alt": "Diagram showing supervised, unsupervised, and reinforcement learning",
+          "caption": "Figure 1: The three main types of machine learning approaches"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to our introduction to machine learning. Machine learning is a revolutionary approach to computing where programs learn and improve from experience rather than following explicit instructions. Think of traditional programming as giving a computer a recipe with detailed steps to follow. In contrast, machine learning is more like giving the computer many examples of a dish and letting it figure out the recipe on its own. The core types of machine learning include supervised learning, where algorithms train on labeled data; unsupervised learning, which finds patterns in unlabeled data; and reinforcement learning, where algorithms learn through trial and error. Machine learning powers many technologies you interact with daily - from voice assistants and recommendation systems to fraud detection and medical diagnostics. What makes it particularly powerful is that these systems can improve over time as they're exposed to more data, often catching patterns too subtle for humans to notice.",
+        "audio_url": "/audio/machine-learning-basics.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we're exploring the fundamentals of machine learning. We'll look at how machines can learn from data, the different approaches to machine learning, and examples of how it's transforming various industries.",
+        "video_url": "/videos/machine-learning-basics.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Machine+Learning+Video",
+        "key_points": [
+          "Machine learning enables computers to learn from data without explicit programming",
+          "Supervised learning uses labeled data to make predictions",
+          "Unsupervised learning identifies patterns in unlabeled data",
+          "Reinforcement learning learns optimal actions through rewards and penalties",
+          "Data quality and quantity are crucial for effective machine learning systems"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What distinguishes machine learning from traditional programming?",
+          "options": [
+            "Machine learning only works on supercomputers",
+            "Machine learning algorithms learn from data rather than following explicit instructions",
+            "Machine learning only applies to image recognition tasks",
+            "Machine learning requires no human involvement whatsoever"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "The key distinction is that machine learning systems learn patterns from data and improve with experience, rather than following explicitly programmed rules."
+        },
+        {
+          "id": 2,
+          "question": "Which type of machine learning would be most appropriate for grouping customers into segments without prior categorization?",
+          "options": [
+            "Supervised learning",
+            "Unsupervised learning",
+            "Reinforcement learning",
+            "Quantum learning"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Unsupervised learning is ideal for finding patterns and grouping data without predefined categories, making it perfect for customer segmentation when you don't already have categories defined."
+        },
+        {
+          "id": 3,
+          "question": "In machine learning, what is the purpose of the training phase?",
+          "options": [
+            "To physically build the computer hardware needed for AI",
+            "To teach programmers how to write better code",
+            "To allow the algorithm to learn patterns from existing data",
+            "To test if users can distinguish AI responses from human ones"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "The training phase exposes the algorithm to data so it can learn relevant patterns and relationships, which it will later use to make predictions or decisions on new data."
+        },
+        {
+          "id": 4,
+          "question": "Which of these is an example of supervised learning?",
+          "options": [
+            "Grouping customers based on purchasing behavior without predefined categories",
+            "A chess program learning to play better through repeated games",
+            "Predicting house prices based on labeled historical sales data",
+            "Identifying unusual transactions in a data stream"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Predicting house prices using labeled historical data is a classic example of supervised learning, where the algorithm learns to predict an output (price) based on input features from labeled examples."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "Machine Learning", "Data Science"],
+      "difficulty_level": "beginner",
+      "prerequisites": ["ai-fundamentals"]
+    }
+  },
+  {
+    "id": 5,
+    "slug": "transformer-models-explained",
+    "title": "Transformer Models Explained",
+    "duration_minutes": 8,
+    "created_at": "2023-01-12T00:00:00Z",
+    "updated_at": "2023-01-12T00:00:00Z",
+    "required_terms": [
+      "ai",
+      "nlp",
+      "machine-learning",
+      "transformer",
+      "neural-network",
+      "attention-mechanism"
+    ],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What are Transformer Models?",
+            "text": "Transformer models are a type of neural network architecture that revolutionized natural language processing. Introduced in 2017 with the paper 'Attention Is All You Need,' transformers use a mechanism called 'attention' to process sequential data in parallel rather than sequentially, making them both more powerful and more efficient than previous approaches."
+          },
+          {
+            "title": "How Transformers Work",
+            "text": "The key innovation in transformers is the self-attention mechanism, which allows the model to weigh the importance of different words in a sentence when processing each word. This enables the model to capture complex relationships and dependencies between words, regardless of their distance from each other in the text. Transformers consist of an encoder (which processes the input) and a decoder (which generates the output), though many modern language models use only the decoder component."
+          },
+          {
+            "title": "Impact on AI",
+            "text": "Transformers form the foundation of modern large language models like GPT, BERT, and T5. They've enabled breakthrough capabilities in tasks such as translation, summarization, question answering, and text generation. Their parallel processing approach also makes them more scalable than previous architectures, allowing researchers to build increasingly large and capable models."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Transformer+Architecture",
+          "alt": "Diagram showing transformer architecture with attention mechanisms",
+          "caption": "Figure 1: Simplified architecture of a transformer model showing encoder and decoder components"
+        }
+      },
+      "listening": {
+        "transcript": "Today we're exploring transformer models, which have revolutionized natural language processing and form the foundation of modern AI language systems. Before transformers came along in 2017, language models primarily used recurrent neural networks, which processed text sequentially - one word after another. This made them relatively slow and limited their ability to capture relationships between distant words in a sentence. Transformers changed everything with their attention mechanism, which allows them to process all words in a sequence simultaneously and determine how much each word should 'attend to' or consider every other word. Imagine reading a sentence and being able to instantly consider how each word relates to every other word, rather than having to read it from start to finish. This parallel processing makes transformers both more powerful and more efficient. Their architecture contains encoders that process input text and decoders that generate output text, though many modern language models use variations of this structure. Transformers' ability to scale efficiently has led to increasingly large and capable models, driving the remarkable advances we've seen in AI language capabilities over the past few years.",
+        "audio_url": "/audio/transformer-models-explained.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we'll explore transformer models and why they've revolutionized natural language processing and AI. We'll visualize how the attention mechanism works and how transformers process language in ways fundamentally different from earlier approaches.",
+        "video_url": "/videos/transformer-models-explained.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Transformer+Models+Video",
+        "key_points": [
+          "Transformers use attention mechanisms to process all words in parallel",
+          "They capture relationships between words regardless of their distance from each other",
+          "Their architecture consists of encoders and decoders with multiple attention layers",
+          "Transformers enabled the scaling of language models to unprecedented sizes",
+          "They form the foundation of modern LLMs like GPT, BERT, and T5"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is the key innovation in transformer models?",
+          "options": [
+            "They require less computing power than previous models",
+            "They can generate images as well as text",
+            "They use attention mechanisms to process data in parallel",
+            "They can translate between any two languages"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "The key innovation in transformers is their use of self-attention mechanisms, which allow them to process all words in a sequence simultaneously and model relationships between words regardless of their distance from each other."
+        },
+        {
+          "id": 2,
+          "question": "How do transformer models differ from recurrent neural networks (RNNs)?",
+          "options": [
+            "Transformers process sequential data in parallel, while RNNs process it sequentially",
+            "Transformers can only work with text, while RNNs work with all types of data",
+            "Transformers are rule-based, while RNNs learn from data",
+            "Transformers were developed in the 1990s, while RNNs are more recent"
+          ],
+          "correct_answer_index": 0,
+          "explanation": "A key difference is that transformers process all elements of a sequence in parallel using attention mechanisms, while RNNs process sequences one element at a time, which is less efficient and makes it harder to capture long-range dependencies."
+        },
+        {
+          "id": 3,
+          "question": "What are the main components of a transformer architecture?",
+          "options": [
+            "Input, hidden layers, and output",
+            "Encoder and decoder with attention mechanisms",
+            "Nodes, edges, and weights",
+            "Convolution, pooling, and fully connected layers"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "The traditional transformer architecture consists of an encoder (which processes input) and a decoder (which generates output), both containing multiple layers with attention mechanisms, though many modern variants use modified versions of this structure."
+        },
+        {
+          "id": 4,
+          "question": "Which of the following models is NOT based on transformer architecture?",
+          "options": [
+            "GPT (Generative Pre-trained Transformer)",
+            "BERT (Bidirectional Encoder Representations from Transformers)",
+            "LSTM (Long Short-Term Memory)",
+            "T5 (Text-to-Text Transfer Transformer)"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "LSTM (Long Short-Term Memory) is a type of recurrent neural network, not a transformer model. GPT, BERT, and T5 are all based on transformer architecture."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "NLP", "Transformers", "Deep Learning"],
+      "difficulty_level": "intermediate",
+      "prerequisites": ["introduction-to-llms", "machine-learning-basics"]
+    }
+  },
+  {
+    "id": 6,
+    "slug": "generative-ai-introduction",
+    "title": "Introduction to Generative AI",
+    "duration_minutes": 6,
+    "created_at": "2023-02-01T00:00:00Z",
+    "updated_at": "2023-02-01T00:00:00Z",
+    "required_terms": [
+      "ai",
+      "machine-learning",
+      "generative-ai",
+      "deep-learning"
+    ],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Generative AI?",
+            "text": "Generative AI refers to artificial intelligence systems that can create new content such as text, images, audio, video, code, or 3D models. Unlike traditional AI systems that analyze or classify existing data, generative AI produces original outputs that didn't exist before. These systems learn patterns from training data and then generate new content with similar characteristics."
+          },
+          {
+            "title": "Types of Generative AI",
+            "text": "Different types of generative AI excel at creating different kinds of content. Large language models generate text and code. Diffusion models create images from text descriptions. Generative adversarial networks produce realistic images, videos, and audio. Each type uses different techniques but shares the fundamental ability to create rather than just analyze."
+          },
+          {
+            "title": "Applications and Impact",
+            "text": "Generative AI has transformed creative and knowledge work across industries. It assists with content creation, design, programming, and problem-solving. It enables personalized experiences, automates routine tasks, and augments human creativity. While powerful, generative AI also raises important questions about originality, copyright, misinformation, and the changing nature of creative work."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Generative+AI+Examples",
+          "alt": "Collage showing examples of generative AI outputs",
+          "caption": "Figure 1: Examples of content created by different generative AI systems"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to our introduction to generative AI, one of the most transformative technologies of the 2020s. Unlike traditional AI that classifies, predicts, or recognizes patterns in existing data, generative AI creates entirely new content. It can write essays, generate images from text descriptions, compose music, create videos, and even write functional code. Different generative AI systems use different techniques. Large language models like GPT and Claude generate text by predicting what words should come next in a sequence. Diffusion models like DALL-E and Stable Diffusion create images by gradually removing noise from random pixels guided by text descriptions. What makes generative AI so revolutionary is that it doesn't just follow explicit rules - it learns patterns from massive datasets and then applies that learning to create something new. This has profound implications for creative work, education, research, and many industries. While powerful, these tools also raise important questions about originality, ethics, and the changing relationship between humans and machines in creative processes.",
+        "audio_url": "/audio/generative-ai-introduction.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we explore generative AI - the technology behind today's most impressive AI systems that can create original content. We'll look at how different types of generative AI work and the impact they're having across industries.",
+        "video_url": "/videos/generative-ai-introduction.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Generative+AI+Video",
+        "key_points": [
+          "Generative AI creates new content rather than just analyzing existing data",
+          "Different systems generate different types of content (text, images, audio)",
+          "Large language models like GPT and Claude create text through next-word prediction",
+          "Diffusion models like DALL-E create images by reversing a noise-adding process",
+          "These technologies are transforming creative fields and knowledge work"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What distinguishes generative AI from other AI systems?",
+          "options": [
+            "Generative AI requires more computing power",
+            "Generative AI creates new content rather than just analyzing existing data",
+            "Generative AI only works with images",
+            "Generative AI is always open-source"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "The defining characteristic of generative AI is its ability to create new, original content (text, images, audio, etc.) rather than simply analyzing or classifying existing data."
+        },
+        {
+          "id": 2,
+          "question": "Which of the following is NOT a common type of generative AI?",
+          "options": [
+            "Large Language Models (LLMs)",
+            "Diffusion Models",
+            "Generative Adversarial Networks (GANs)",
+            "Support Vector Machines (SVMs)"
+          ],
+          "correct_answer_index": 3,
+          "explanation": "Support Vector Machines (SVMs) are classification algorithms, not generative AI models. LLMs, diffusion models, and GANs are all common types of generative AI systems."
+        },
+        {
+          "id": 3,
+          "question": "How do diffusion models generate images?",
+          "options": [
+            "By copying elements from existing images",
+            "By gradually removing noise from random data guided by text prompts",
+            "By directly translating text into visual elements",
+            "By using facial recognition technology"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Diffusion models work by gradually removing noise from random data in a process that reverses a noise-adding process. Text prompts guide this denoising process to create specific images."
+        },
+        {
+          "id": 4,
+          "question": "Which of the following is a legitimate concern related to generative AI?",
+          "options": [
+            "It cannot produce high-quality content",
+            "It works too slowly for practical use",
+            "It might create copyright and attribution challenges",
+            "It can only be used by professional developers"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "Generative AI raises legitimate concerns about copyright, attribution, and originality, as these systems learn from existing works and can create content that resembles them."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": [
+        "AI",
+        "Generative AI",
+        "Machine Learning",
+        "Creative Technology"
+      ],
+      "difficulty_level": "beginner",
+      "prerequisites": ["ai-fundamentals", "machine-learning-basics"]
+    }
+  },
+  {
+    "id": 7,
+    "slug": "deep-learning-fundamentals",
+    "title": "Deep Learning Fundamentals",
+    "duration_minutes": 9,
+    "created_at": "2023-01-10T00:00:00Z",
+    "updated_at": "2023-01-10T00:00:00Z",
+    "required_terms": [
+      "ai",
+      "machine-learning",
+      "deep-learning",
+      "neural-network"
+    ],
+    "learning_styles": {
+      "reading": {
+        "content": [
+          {
+            "title": "What is Deep Learning?",
+            "text": "Deep learning is a specialized subset of machine learning that uses artificial neural networks with multiple layers (hence 'deep') to progressively extract higher-level features from raw data. Inspired by the structure of the human brain, deep learning models can automatically discover relevant patterns without requiring manual feature engineering, making them particularly powerful for complex tasks."
+          },
+          {
+            "title": "Neural Networks",
+            "text": "At the core of deep learning are neural networks, which consist of layers of interconnected nodes or 'neurons.' Each connection has a weight that adjusts during training. The input layer receives data, hidden layers process it through various transformations, and the output layer produces the final result. The 'deep' in deep learning refers to having multiple hidden layers, which allows these models to learn hierarchical representations of data."
+          },
+          {
+            "title": "Training Deep Learning Models",
+            "text": "Deep learning models learn through a process called backpropagation. First, the model makes a prediction based on input data. Then, it compares this prediction to the actual value, calculating the error. This error is then propagated backward through the network, adjusting the weights of connections to minimize future errors. This process repeats many times across large datasets until the model achieves sufficient accuracy."
+          }
+        ],
+        "image": {
+          "url": "https://placehold.co/600x400?text=Deep+Neural+Network",
+          "alt": "Diagram showing layers of a deep neural network",
+          "caption": "Figure 1: Structure of a deep neural network with multiple hidden layers"
+        }
+      },
+      "listening": {
+        "transcript": "Welcome to our lesson on deep learning fundamentals. Deep learning is a powerful subset of machine learning that's behind many of the most impressive AI breakthroughs in recent years. What makes deep learning special is its use of artificial neural networks with many layers – that's where the 'deep' comes from. These networks are loosely inspired by the human brain, with interconnected nodes that process and transform information. The true power of deep learning is its ability to automatically discover important features in raw data. While traditional machine learning often requires humans to specify which features of the data are important, deep learning models can figure this out on their own. This makes them particularly good at handling unstructured data like images, audio, and text. Deep learning models learn through a process called backpropagation, where they gradually adjust their internal parameters to reduce errors in their predictions. This learning process requires large amounts of data and computational resources, but the results can be remarkable. Deep learning has enabled breakthroughs in computer vision, natural language processing, speech recognition, and many other fields.",
+        "audio_url": "/audio/deep-learning-fundamentals.mp3"
+      },
+      "watching": {
+        "transcript": "In this video, we'll explore the fundamentals of deep learning, focusing on how neural networks with multiple layers process information and learn from data. We'll visualize how information flows through a network and how the learning process works.",
+        "video_url": "/videos/deep-learning-fundamentals.mp4",
+        "thumbnail_url": "https://placehold.co/640x360?text=Deep+Learning+Video",
+        "key_points": [
+          "Deep learning uses neural networks with multiple layers to learn from data",
+          "These networks automatically discover important features without human specification",
+          "Information passes through layers of interconnected neurons with weighted connections",
+          "Networks learn through backpropagation, adjusting weights to minimize errors",
+          "Deep learning excels at tasks involving unstructured data like images and text"
+        ]
+      }
+    },
+    "quiz": {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What distinguishes deep learning from traditional machine learning?",
+          "options": [
+            "Deep learning doesn't require any data",
+            "Deep learning uses neural networks with multiple layers",
+            "Deep learning only works with numerical data",
+            "Deep learning always provides perfect results"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Deep learning is characterized by its use of neural networks with multiple hidden layers (hence 'deep'), which allows it to automatically learn hierarchical features from data without manual feature engineering."
+        },
+        {
+          "id": 2,
+          "question": "What are the three main types of layers in a typical neural network?",
+          "options": [
+            "Top, middle, and bottom layers",
+            "Primary, secondary, and tertiary layers",
+            "Input, hidden, and output layers",
+            "Data, processing, and result layers"
+          ],
+          "correct_answer_index": 2,
+          "explanation": "A typical neural network consists of an input layer that receives data, one or more hidden layers that process the data, and an output layer that produces the final result or prediction."
+        },
+        {
+          "id": 3,
+          "question": "What is backpropagation in deep learning?",
+          "options": [
+            "The process of sending data backward through the internet",
+            "A technique for compressing neural networks",
+            "The algorithm that determines the initial structure of a network",
+            "The process of adjusting weights based on prediction errors"
+          ],
+          "correct_answer_index": 3,
+          "explanation": "Backpropagation is the primary algorithm used to train neural networks. It calculates the gradient of the error with respect to the network weights and adjusts them to minimize future errors."
+        },
+        {
+          "id": 4,
+          "question": "Why do deep learning models typically require large amounts of data?",
+          "options": [
+            "To slow down the training process",
+            "To learn patterns and generalize effectively across variations",
+            "Because the technology is inefficient",
+            "Only because cloud storage is cheap"
+          ],
+          "correct_answer_index": 1,
+          "explanation": "Deep learning models have many parameters to tune and need large amounts of data to effectively learn patterns, avoid overfitting, and generalize well to new, unseen examples."
+        }
+      ]
+    },
+    "metadata": {
+      "tags": ["AI", "Deep Learning", "Neural Networks", "Machine Learning"],
+      "difficulty_level": "intermediate",
+      "prerequisites": ["machine-learning-basics", "ai-fundamentals"]
     }
   }
 ]
