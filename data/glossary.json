@@ -1,0 +1,64 @@
+[
+  {
+    "id": "llm",
+    "term": "LLM",
+    "aliases": ["Large Language Model", "LLMs", "language model"],
+    "full_form": "Large Language Model",
+    "short_definition": "AI systems trained on massive text datasets that can generate human-like text.",
+    "long_definition": "Large Language Models are a type of artificial intelligence system trained on vast amounts of text data. They use neural networks (particularly transformer architectures) to understand and generate human-like text based on patterns they've learned.",
+    "examples": ["GPT-4", "Claude", "Llama"],
+    "related_terms": ["nlp", "ai", "transformer"]
+  },
+  {
+    "id": "nlp",
+    "term": "NLP",
+    "aliases": ["Natural Language Processing"],
+    "full_form": "Natural Language Processing",
+    "short_definition": "The field of AI focused on enabling computers to understand and process human language.",
+    "long_definition": "Natural Language Processing combines computational linguistics, machine learning, and deep learning to help computers understand, interpret, and generate human language in useful ways.",
+    "examples": [
+      "Sentiment analysis",
+      "Machine translation",
+      "Text summarization"
+    ],
+    "related_terms": ["llm", "ai", "machine-learning"]
+  },
+  {
+    "id": "ai",
+    "term": "AI",
+    "aliases": ["Artificial Intelligence", "artificial intelligence"],
+    "full_form": "Artificial Intelligence",
+    "short_definition": "Computer systems designed to perform tasks that typically require human intelligence.",
+    "long_definition": "Artificial Intelligence refers to computer systems that can perform tasks that typically require human intelligence, such as visual perception, speech recognition, decision-making, and language translation. Modern AI is primarily based on machine learning techniques.",
+    "examples": [
+      "Computer vision",
+      "Speech recognition",
+      "Autonomous vehicles"
+    ],
+    "related_terms": ["machine-learning", "deep-learning", "neural-network"]
+  },
+  {
+    "id": "machine-learning",
+    "term": "Machine Learning",
+    "aliases": ["ML", "machine learning"],
+    "full_form": "Machine Learning",
+    "short_definition": "A subset of AI that enables systems to learn and improve from experience without explicit programming.",
+    "long_definition": "Machine Learning is a field of artificial intelligence that focuses on developing algorithms and models that allow computers to learn patterns from data and make predictions or decisions without being explicitly programmed for the task. It relies on statistical techniques to enable computers to improve their performance on a specific task through experience.",
+    "examples": [
+      "Image classification",
+      "Recommendation systems",
+      "Natural language processing"
+    ],
+    "related_terms": ["ai", "deep-learning", "neural-network"]
+  },
+  {
+    "id": "transformer",
+    "term": "Transformer",
+    "aliases": ["transformer model", "transformer architecture"],
+    "full_form": "Transformer Architecture",
+    "short_definition": "Neural network architecture that uses self-attention mechanisms to process sequential data.",
+    "long_definition": "Transformer is a type of neural network architecture introduced in 2017 that uses self-attention mechanisms to weigh the importance of different parts of the input data. It has become the foundation for most modern language models due to its ability to process sequential data in parallel.",
+    "examples": ["BERT", "GPT", "T5"],
+    "related_terms": ["attention-mechanism", "llm", "neural-network"]
+  }
+]
