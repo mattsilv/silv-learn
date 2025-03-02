@@ -10,6 +10,7 @@ A Next.js microlearning platform supporting multiple learning styles (reading, l
 - JSON-based mock data structure
 - Smart terminology system with hover definitions
 - Term prerequisites verification before lessons
+- User progress tracking and statistics
 
 ## Tech Stack
 
@@ -21,13 +22,15 @@ A Next.js microlearning platform supporting multiple learning styles (reading, l
 
 ## Recent Changes
 
+- Updated app icon to a lightbulb design
+- Implemented user progress tracking and statistics in header
 - Implemented comprehensive glossary/terminology system
 - Created term highlighting and hover definitions
 - Added term prerequisite verification for lessons
 - Moved hardcoded lesson data to JSON files in `data/lessons.json`
 - Created database schema design in `data/README.md`
-- Added utility service (`utils/lessonService.ts`) for data operations
-- Implemented dynamic routing for lessons via `pages/lessons/[slug].tsx`
+- Added utility services for data operations
+- Implemented dynamic routing for lessons
 - Extracted UI components for better maintainability
 
 ## Data Structure

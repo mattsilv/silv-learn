@@ -8,6 +8,7 @@ import { getAllTerms } from "../utils/glossaryService";
 import { getUserProgress } from "../utils/userProgressService";
 import { useState, useEffect } from "react";
 import { GlossaryTerm } from "../types/glossary";
+import LoginButton from "../components/LoginButton";
 
 type HomeProps = {
   lessons: Lesson[];
@@ -66,28 +67,15 @@ const Home: NextPage<HomeProps> = ({ lessons }) => {
   return (
     <>
       <Head>
-        <title>MicroLearn - Interactive Learning Platform</title>
-        <meta name="description" content="Interactive microlearning platform" />
+        <title>silvlearn - Interactive Learning Platform</title>
+        <meta
+          name="description"
+          content="silvlearn - Interactive microlearning platform"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Header */}
-        <header className="bg-white shadow-sm">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white mr-3">
-                  <Book size={20} />
-                </div>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Micro<span className="text-blue-600">Learn</span>
-                </h1>
-              </div>
-            </div>
-          </div>
-        </header>
-
         {/* Main content */}
         <main className="flex-1">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

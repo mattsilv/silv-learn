@@ -2,26 +2,45 @@
   {
     "id": "llm",
     "term": "LLM",
-    "aliases": ["Large Language Model", "LLMs", "language model"],
+    "aliases": [
+      "Large Language Model",
+      "LLMs",
+      "language model",
+      "generative AI model"
+    ],
     "full_form": "Large Language Model",
-    "short_definition": "AI systems trained on massive text datasets that can generate human-like text.",
-    "long_definition": "Large Language Models are a type of artificial intelligence system trained on vast amounts of text data. They use neural networks (particularly transformer architectures) to understand and generate human-like text based on patterns they've learned.",
-    "examples": ["GPT-4", "Claude", "Llama"],
-    "related_terms": ["nlp", "ai", "transformer"]
+    "short_definition": "AI systems trained on massive text datasets that can generate human-like text and respond to various prompts.",
+    "long_definition": "Large Language Models are a type of artificial intelligence system trained on vast amounts of text data. They use neural networks (particularly transformer architectures) to understand and generate human-like text based on patterns they've learned. They can perform various language tasks like answering questions, writing content, translating languages, and summarizing information without being specifically programmed for each task.",
+    "examples": ["GPT-4", "Claude", "Llama", "Gemini", "Mistral"],
+    "related_terms": [
+      "nlp",
+      "ai",
+      "transformer",
+      "generative-ai",
+      "prompt-engineering"
+    ]
   },
   {
     "id": "nlp",
     "term": "NLP",
-    "aliases": ["Natural Language Processing"],
+    "aliases": ["Natural Language Processing", "natural language processing"],
     "full_form": "Natural Language Processing",
-    "short_definition": "The field of AI focused on enabling computers to understand and process human language.",
-    "long_definition": "Natural Language Processing combines computational linguistics, machine learning, and deep learning to help computers understand, interpret, and generate human language in useful ways.",
+    "short_definition": "The field of AI focused on enabling computers to understand, interpret, and generate human language.",
+    "long_definition": "Natural Language Processing combines computational linguistics, machine learning, and deep learning to help computers understand, interpret, and generate human language in useful ways. NLP enables machines to read text, hear speech, interpret it, measure sentiment, and determine which parts are important. It's the technology that powers virtual assistants, language translation apps, and chatbots.",
     "examples": [
       "Sentiment analysis",
       "Machine translation",
-      "Text summarization"
+      "Text summarization",
+      "Speech recognition",
+      "Chatbots"
     ],
-    "related_terms": ["llm", "ai", "machine-learning"]
+    "related_terms": [
+      "llm",
+      "ai",
+      "machine-learning",
+      "tokenization",
+      "text-embedding"
+    ]
   },
   {
     "id": "ai",
@@ -29,13 +48,21 @@
     "aliases": ["Artificial Intelligence", "artificial intelligence"],
     "full_form": "Artificial Intelligence",
     "short_definition": "Computer systems designed to perform tasks that typically require human intelligence.",
-    "long_definition": "Artificial Intelligence refers to computer systems that can perform tasks that typically require human intelligence, such as visual perception, speech recognition, decision-making, and language translation. Modern AI is primarily based on machine learning techniques.",
+    "long_definition": "Artificial Intelligence refers to computer systems that can perform tasks that typically require human intelligence, such as visual perception, speech recognition, decision-making, and language translation. Modern AI is primarily based on machine learning techniques. AI can be categorized as narrow AI (designed for specific tasks) or general AI (hypothetical systems with human-like intelligence across multiple domains).",
     "examples": [
-      "Computer vision",
-      "Speech recognition",
-      "Autonomous vehicles"
+      "Computer vision systems",
+      "Speech recognition software",
+      "Autonomous vehicles",
+      "AI assistants like Siri or Alexa",
+      "Recommendation algorithms"
     ],
-    "related_terms": ["machine-learning", "deep-learning", "neural-network"]
+    "related_terms": [
+      "machine-learning",
+      "deep-learning",
+      "neural-network",
+      "generative-ai",
+      "computer-vision"
+    ]
   },
   {
     "id": "machine-learning",
@@ -43,22 +70,243 @@
     "aliases": ["ML", "machine learning"],
     "full_form": "Machine Learning",
     "short_definition": "A subset of AI that enables systems to learn and improve from experience without explicit programming.",
-    "long_definition": "Machine Learning is a field of artificial intelligence that focuses on developing algorithms and models that allow computers to learn patterns from data and make predictions or decisions without being explicitly programmed for the task. It relies on statistical techniques to enable computers to improve their performance on a specific task through experience.",
+    "long_definition": "Machine Learning is a field of artificial intelligence that focuses on developing algorithms and models that allow computers to learn patterns from data and make predictions or decisions without being explicitly programmed for the task. It relies on statistical techniques to enable computers to improve their performance on a specific task through experience. ML systems are 'trained' rather than 'programmed' by exposing them to large quantities of data.",
     "examples": [
       "Image classification",
       "Recommendation systems",
-      "Natural language processing"
+      "Fraud detection",
+      "Email spam filtering",
+      "Weather prediction"
     ],
-    "related_terms": ["ai", "deep-learning", "neural-network"]
+    "related_terms": [
+      "ai",
+      "deep-learning",
+      "neural-network",
+      "supervised-learning",
+      "unsupervised-learning"
+    ]
   },
   {
     "id": "transformer",
     "term": "Transformer",
     "aliases": ["transformer model", "transformer architecture"],
     "full_form": "Transformer Architecture",
-    "short_definition": "Neural network architecture that uses self-attention mechanisms to process sequential data.",
-    "long_definition": "Transformer is a type of neural network architecture introduced in 2017 that uses self-attention mechanisms to weigh the importance of different parts of the input data. It has become the foundation for most modern language models due to its ability to process sequential data in parallel.",
-    "examples": ["BERT", "GPT", "T5"],
-    "related_terms": ["attention-mechanism", "llm", "neural-network"]
+    "short_definition": "Neural network architecture that uses self-attention mechanisms to process sequential data efficiently.",
+    "long_definition": "Transformer is a type of neural network architecture introduced in 2017 that uses self-attention mechanisms to weigh the importance of different parts of the input data. It has become the foundation for most modern language models due to its ability to process sequential data in parallel, which makes it much more efficient than previous architectures like RNNs and LSTMs. The transformer architecture allows for better handling of long-range dependencies in text and enables more effective pre-training on large datasets.",
+    "examples": ["BERT", "GPT", "T5", "CLIP", "ViT (Vision Transformer)"],
+    "related_terms": [
+      "attention-mechanism",
+      "llm",
+      "neural-network",
+      "self-attention",
+      "encoder-decoder"
+    ]
+  },
+  {
+    "id": "deep-learning",
+    "term": "Deep Learning",
+    "aliases": ["DL", "deep learning", "deep neural networks"],
+    "full_form": "Deep Learning",
+    "short_definition": "A subset of machine learning using neural networks with many layers to learn from large amounts of data.",
+    "long_definition": "Deep Learning is a specific type of machine learning that uses artificial neural networks with multiple layers (hence 'deep'). These deep neural networks are inspired by the structure of the human brain and can learn hierarchical features from data. Deep learning has led to breakthroughs in areas like computer vision, speech recognition, and natural language processing, largely due to its ability to automatically discover relevant features from raw data without manual feature engineering.",
+    "examples": [
+      "Convolutional Neural Networks (CNNs) for image processing",
+      "Recurrent Neural Networks (RNNs) for sequence data",
+      "Transformers for language models",
+      "Deep Q-Networks for reinforcement learning"
+    ],
+    "related_terms": [
+      "neural-network",
+      "machine-learning",
+      "cnn",
+      "rnn",
+      "transformer"
+    ]
+  },
+  {
+    "id": "neural-network",
+    "term": "Neural Network",
+    "aliases": ["artificial neural network", "ANN", "neural net"],
+    "full_form": "Artificial Neural Network",
+    "short_definition": "Computing systems inspired by biological neural networks that learn from data through pattern recognition.",
+    "long_definition": "Neural networks are computing systems vaguely inspired by the biological neural networks in animal brains. They consist of artificial neurons organized in layers that can learn to perform tasks by considering examples, generally without being programmed with task-specific rules. A neural network contains weighted connections between neurons that adjust during training, allowing the network to 'learn' from data. Modern deep learning uses neural networks with many layers (deep neural networks).",
+    "examples": [
+      "Perceptron (simplest form)",
+      "Multilayer Perceptron (MLP)",
+      "Convolutional Neural Network (CNN)",
+      "Recurrent Neural Network (RNN)"
+    ],
+    "related_terms": [
+      "deep-learning",
+      "machine-learning",
+      "activation-function",
+      "backpropagation",
+      "ai"
+    ]
+  },
+  {
+    "id": "attention-mechanism",
+    "term": "Attention Mechanism",
+    "aliases": ["attention", "neural attention"],
+    "full_form": "Attention Mechanism",
+    "short_definition": "A technique that allows neural networks to focus on specific parts of input data when processing it.",
+    "long_definition": "The attention mechanism is a technique used in neural networks that allows the model to focus on specific parts of the input when producing an output. Similar to how humans pay attention to certain elements when processing information, attention mechanisms allow AI models to weigh the importance of different parts of the input data. This approach has been revolutionary for tasks like machine translation and is a core component of transformer-based models.",
+    "examples": [
+      "Self-attention in transformers",
+      "Bahdanau attention in machine translation",
+      "Multi-head attention in BERT and GPT"
+    ],
+    "related_terms": ["transformer", "self-attention", "llm", "encoder-decoder"]
+  },
+  {
+    "id": "generative-ai",
+    "term": "Generative AI",
+    "aliases": ["generative artificial intelligence", "generative models"],
+    "full_form": "Generative Artificial Intelligence",
+    "short_definition": "AI systems that can create new content such as text, images, music, or code.",
+    "long_definition": "Generative AI refers to artificial intelligence systems that can create new content, including text, images, audio, code, or other media. These systems learn patterns from existing data and then generate new outputs that have similar characteristics. Unlike discriminative models that classify or predict outputs based on inputs, generative models can produce entirely new creations. Modern generative AI includes large language models (for text), diffusion models (for images), and other approaches.",
+    "examples": [
+      "GPT and Claude for text generation",
+      "DALL-E, Midjourney, and Stable Diffusion for image creation",
+      "Suno and AudioLM for music generation",
+      "GitHub Copilot for code generation"
+    ],
+    "related_terms": ["llm", "diffusion-model", "gan", "vae", "text-to-image"]
+  },
+  {
+    "id": "prompt-engineering",
+    "term": "Prompt Engineering",
+    "aliases": ["prompting", "prompt design", "prompt optimization"],
+    "full_form": "Prompt Engineering",
+    "short_definition": "The practice of designing effective inputs to get desired outputs from AI models, especially LLMs.",
+    "long_definition": "Prompt engineering is the process of crafting, refining, and optimizing inputs to AI systems (particularly large language models) to get desired outputs. It involves understanding how to phrase questions, provide context, and structure inputs in ways that guide the AI to produce accurate, useful, and appropriate responses. As language models become more capable, prompt engineering has emerged as a critical skill for effectively utilizing these systems.",
+    "examples": [
+      "Chain-of-thought prompting to encourage step-by-step reasoning",
+      "Few-shot prompting with examples",
+      "System prompts that define the AI's role and behavior",
+      "Using specific formatting to control outputs"
+    ],
+    "related_terms": [
+      "llm",
+      "few-shot-learning",
+      "chain-of-thought",
+      "system-prompt",
+      "in-context-learning"
+    ]
+  },
+  {
+    "id": "tokenization",
+    "term": "Tokenization",
+    "aliases": ["tokens", "tokenizing", "text tokenization"],
+    "full_form": "Text Tokenization",
+    "short_definition": "The process of breaking text into smaller units (tokens) for processing by language models.",
+    "long_definition": "Tokenization is the process of breaking down text into smaller units called tokens, which serve as the basic input units for language models. Tokens can be words, subwords, characters, or byte sequences. Modern language models typically use subword tokenization methods, which break uncommon words into smaller pieces while keeping common words intact. The number of tokens in a text influences processing time and cost when using language models.",
+    "examples": [
+      "Word tokenization: 'I love AI' → ['I', 'love', 'AI']",
+      "Subword tokenization: 'untrained' → ['un', 'trained']",
+      "Character tokenization: 'hello' → ['h', 'e', 'l', 'l', 'o']"
+    ],
+    "related_terms": ["llm", "nlp", "bpe", "wordpiece", "sentencepiece"]
+  },
+  {
+    "id": "supervised-learning",
+    "term": "Supervised Learning",
+    "aliases": ["supervised training", "supervised ML"],
+    "full_form": "Supervised Learning",
+    "short_definition": "A machine learning approach where models learn from labeled training data.",
+    "long_definition": "Supervised learning is a type of machine learning where an algorithm learns from labeled training data. In this approach, each training example has an input and a corresponding correct output (label). The algorithm learns to map inputs to outputs by adjusting its parameters based on the difference between its predictions and the correct labels. The goal is for the model to generalize from the training data to accurately predict outputs for new, unseen inputs.",
+    "examples": [
+      "Classification (predicting categories)",
+      "Regression (predicting continuous values)",
+      "Object detection in images",
+      "Spam email detection"
+    ],
+    "related_terms": [
+      "machine-learning",
+      "unsupervised-learning",
+      "classification",
+      "regression",
+      "training-data"
+    ]
+  },
+  {
+    "id": "unsupervised-learning",
+    "term": "Unsupervised Learning",
+    "aliases": ["unsupervised training", "unsupervised ML"],
+    "full_form": "Unsupervised Learning",
+    "short_definition": "Machine learning where models find patterns in data without labeled examples.",
+    "long_definition": "Unsupervised learning is a type of machine learning where algorithms identify patterns in data without labeled examples. Unlike supervised learning, there are no correct answers for the algorithm to learn from. Instead, the algorithm discovers hidden structures or relationships within the data. Unsupervised learning is useful for tasks like clustering similar items, dimensionality reduction, and anomaly detection where labeled data is unavailable or impractical to obtain.",
+    "examples": [
+      "Clustering customers by purchasing behavior",
+      "Dimensionality reduction with PCA or t-SNE",
+      "Anomaly detection in network traffic",
+      "Topic modeling in text documents"
+    ],
+    "related_terms": [
+      "machine-learning",
+      "supervised-learning",
+      "clustering",
+      "dimensionality-reduction",
+      "anomaly-detection"
+    ]
+  },
+  {
+    "id": "fine-tuning",
+    "term": "Fine-tuning",
+    "aliases": ["model fine-tuning", "transfer learning"],
+    "full_form": "Model Fine-tuning",
+    "short_definition": "The process of further training a pre-trained model on a specific dataset for a particular task.",
+    "long_definition": "Fine-tuning is the process of taking a model that has been pre-trained on a large dataset and further training it on a smaller, more specific dataset to adapt it for a particular task or domain. This approach leverages transfer learning, where knowledge gained from solving one problem is applied to a different but related problem. Fine-tuning is common with large language models, where a base model is adapted for specific applications like medical Q&A, legal document analysis, or customer service.",
+    "examples": [
+      "Fine-tuning an LLM for medical terminology",
+      "Adapting a general image model for specific wildlife detection",
+      "Customizing a language model for a company's writing style",
+      "Specialized code completion models"
+    ],
+    "related_terms": [
+      "transfer-learning",
+      "pre-training",
+      "llm",
+      "domain-adaptation",
+      "few-shot-learning"
+    ]
+  },
+  {
+    "id": "computer-vision",
+    "term": "Computer Vision",
+    "aliases": ["CV", "machine vision", "computer vision systems"],
+    "full_form": "Computer Vision",
+    "short_definition": "A field of AI that enables computers to interpret and understand visual information from the world.",
+    "long_definition": "Computer Vision is a field of artificial intelligence that enables computers to derive meaningful information from digital images, videos, and other visual inputs. It involves developing algorithms and systems that can perform tasks that the human visual system can do, such as recognizing objects, people, scenes, activities, and understanding spatial relationships. Computer vision systems typically use deep learning, particularly convolutional neural networks, to process and analyze visual data.",
+    "examples": [
+      "Facial recognition systems",
+      "Self-driving car perception systems",
+      "Medical image analysis",
+      "Object detection in security cameras",
+      "Augmented reality applications"
+    ],
+    "related_terms": [
+      "cnn",
+      "object-detection",
+      "image-segmentation",
+      "deep-learning",
+      "ai"
+    ]
+  },
+  {
+    "id": "diffusion-model",
+    "term": "Diffusion Model",
+    "aliases": ["diffusion", "latent diffusion model", "LDM"],
+    "full_form": "Diffusion Model",
+    "short_definition": "A type of generative AI model that creates images by gradually removing noise from random data.",
+    "long_definition": "Diffusion models are a class of generative AI models that work by gradually removing noise from randomly generated data. They're trained by first adding noise to images, then learning to reverse this process. When generating new content, they start with pure noise and incrementally refine it into a coherent image. This approach has led to breakthrough capabilities in image generation, enabling systems like Stable Diffusion, DALL-E, and Midjourney to create highly detailed, realistic images from text descriptions.",
+    "examples": ["Stable Diffusion", "DALL-E", "Midjourney", "Google's Imagen"],
+    "related_terms": [
+      "generative-ai",
+      "text-to-image",
+      "gan",
+      "latent-space",
+      "vae"
+    ]
   }
 ]
