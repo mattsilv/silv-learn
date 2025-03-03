@@ -13,49 +13,55 @@ const AuthenticatePage = () => {
 
     const authenticateUser = async () => {
       try {
-        // Get token from URL
+        console.log("Authentication query params:", router.query);
+
+        // Get parameters from URL - Google OAuth returns code and state
         const { token, stytch_token_type, code, state } = router.query;
 
-        // Check if we have a valid authentication method
-        const hasToken = token && typeof token === "string";
-        const hasCode = code && typeof code === "string"; // Google OAuth returns code
-
-        if (!hasToken && !hasCode) {
-          setError("Invalid authentication parameters");
-          setIsLoading(false);
-          return;
+        // For debug purposes
+        for (const [key, value] of Object.entries(router.query)) {
+          console.log(`Query param: ${key} = ${value}`);
         }
 
         // Dynamically import stytchService to avoid SSR issues
         const { stytchService } = await import("../utils/stytchService");
 
-        // Handle different authentication methods
-        if (hasToken) {
+        // Handle magic link authentication
+        if (token && typeof token === "string") {
+          console.log("Processing magic link authentication");
           const tokenType =
             typeof stytch_token_type === "string"
               ? stytch_token_type
               : "magic_links";
 
-          if (tokenType === "oauth") {
-            // Handle OAuth authentication (Google, Apple)
-            await stytchService.authenticateOAuth(token, tokenType);
-          } else {
-            // Handle magic link authentication
-            await stytchService.authenticateWithMagicLink(token, tokenType);
-          }
-        } else if (hasCode) {
-          // Google OAuth with code flow
-          console.log("Authenticating with OAuth code flow");
-          const client = await import("@stytch/nextjs/headless");
-          // The authentication step happens automatically via Stytch SDK
-        }
+          await stytchService.authenticateWithMagicLink(token, tokenType);
 
-        // Dispatch event for successful login
-        window.dispatchEvent(
-          new CustomEvent("userLoggedIn", {
-            detail: { method: hasCode ? "google" : "email" },
-          })
-        );
+          // Send login event
+          window.dispatchEvent(
+            new CustomEvent("userLoggedIn", {
+              detail: { method: "email" },
+            })
+          );
+        }
+        // Handle OAuth authentication (Google, Apple)
+        else if (code && typeof code === "string") {
+          console.log("Processing OAuth authentication with code:", code);
+
+          // For OAuth with code, we need to use the stytchService
+          // The token is the code, and the token type is "oauth"
+          await stytchService.authenticateOAuth(code, "oauth");
+
+          // Send login event
+          window.dispatchEvent(
+            new CustomEvent("userLoggedIn", {
+              detail: { method: "oauth" },
+            })
+          );
+        }
+        // No valid authentication parameters
+        else {
+          throw new Error("No valid authentication parameters found");
+        }
 
         // Redirect to home page after successful authentication
         router.push("/");
@@ -67,8 +73,11 @@ const AuthenticatePage = () => {
     };
 
     // Only attempt authentication if we have query parameters
-    if (router.isReady) {
+    if (router.isReady && Object.keys(router.query).length > 0) {
       authenticateUser();
+    } else if (router.isReady) {
+      // No query parameters, redirect to home
+      router.push("/");
     }
   }, [router.isReady, router.query]);
 
