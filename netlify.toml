@@ -18,12 +18,10 @@
   package = "netlify-plugin-cache-nextjs"
   
   [plugins.inputs]
-    # Specify directories to cache
-    cacheDirectories = [
-      ".next/cache",
-      "node_modules/.cache",
-      ".cache"
-    ]
+    # Specify the build directory path
+    build_dir_path = ".next"
+    # Optional: custom build directory name
+    custom_build_dir_name = ".next"
 
 # Add compression for faster page loads
 [[headers]]
