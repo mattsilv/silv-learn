@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A microlearning platform built with Next.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "doppler run -- next dev",
+    "build": "doppler run -- next build",
+    "start": "doppler run -- next start",
     "lint": "next lint"
   },
   "keywords": [
@@ -18,7 +18,10 @@
   "license": "ISC",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@stytch/nextjs": "^21.4.1",
+    "@stytch/vanilla-js": "^5.18.0",
     "autoprefixer": "^10.4.15",
+    "axios": "^1.6.7",
     "lucide-react": "^0.279.0",
     "next": "13.4.19",
     "postcss": "^8.4.29",

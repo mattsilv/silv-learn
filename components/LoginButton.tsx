@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
-import LoginModal from "./LoginModal";
+import LoginModal from "../components/LoginModal";
 
 const LoginButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

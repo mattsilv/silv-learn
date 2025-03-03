@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Users, Menu, X } from "lucide-react";
 import LoginButton from "./LoginButton";
+import UserMenu from "./UserMenu";
+import { authService, User } from "../utils/authService";
 
 type HeaderProps = {
   userStats: {
@@ -16,7 +18,70 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ userStats }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { ranking, totalUsers } = userStats;
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (authService.isAuthenticated()) {
+        try {
+          const user = await authService.getCurrentUser();
+          if (user) {
+            setIsLoggedIn(true);
+            setCurrentUser(user);
+            setUserName(user.username || user.full_name || "User");
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          // If there's an error, clear the token
+          authService.logout();
+        }
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  // Listen for login events from the LoginModal
+  useEffect(() => {
+    const handleLoginEvent = (event: CustomEvent) => {
+      setIsLoggedIn(true);
+      if (event.detail?.name) {
+        setUserName(event.detail.name);
+      }
+
+      // Fetch user data after login
+      const fetchUser = async () => {
+        try {
+          const user = await authService.getCurrentUser();
+          if (user) {
+            setCurrentUser(user);
+            setUserName(user.username || user.full_name || "User");
+          }
+        } catch (error) {
+          console.error("Error fetching user after login:", error);
+        }
+      };
+
+      fetchUser();
+    };
+
+    window.addEventListener("userLoggedIn" as any, handleLoginEvent);
+
+    return () => {
+      window.removeEventListener("userLoggedIn" as any, handleLoginEvent);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    authService.logout();
+    setIsLoggedIn(false);
+    setCurrentUser(null);
+    setUserName("");
+  };
 
   return (
     <header className="bg-white shadow-sm">
@@ -62,8 +127,12 @@ const Header: React.FC<HeaderProps> = ({ userStats }) => {
               </span>
             </div>
 
-            {/* Login button */}
-            <LoginButton />
+            {/* Login button or user menu */}
+            {isLoggedIn ? (
+              <UserMenu userName={userName} onLogout={handleLogout} />
+            ) : (
+              <LoginButton />
+            )}
           </div>
         </div>
       </div>
