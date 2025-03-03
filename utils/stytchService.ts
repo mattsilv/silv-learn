@@ -186,7 +186,42 @@ export const stytchService = {
   },
 
   /**
+   * Authenticate OAuth session
+   * Following Stytch documentation: https://stytch.com/docs/quickstarts/nextjs
+   */
+  async authenticateOAuth(token: string, tokenType: string): Promise<void> {
+    const client = await ensureClient();
+    try {
+      // Ensure token is a string and not undefined
+      if (!token || typeof token !== "string") {
+        console.error("Invalid token provided:", token);
+        throw new Error("Invalid token: Token must be a string");
+      }
+
+      console.log(
+        `Authenticating OAuth with token: ${token.substring(0, 10)}...`
+      );
+
+      // Use the oauth.authenticate method for OAuth tokens
+      // Following Stytch documentation
+      const response = await client.oauth.authenticate({
+        token: token,
+        session_duration_minutes: 60 * 24 * 7, // 1 week
+      });
+
+      console.log("OAuth authentication successful");
+
+      // Store the session token
+      authService.authenticateWithStytch(response.session_token);
+    } catch (error) {
+      console.error("Error authenticating with OAuth:", error);
+      throw error;
+    }
+  },
+
+  /**
    * Start OAuth flow for Google
+   * Following Stytch documentation: https://stytch.com/docs/quickstarts/nextjs
    */
   async startGoogleOAuth(): Promise<void> {
     const client = await ensureClient();
@@ -197,11 +232,7 @@ export const stytchService = {
         signup_redirect_url: `${window.location.origin}/authenticate`,
       };
 
-      // Log the OAuth parameters to help with debugging
-      console.log("Starting Google OAuth with params:", {
-        ...params,
-        origin: window.location.origin,
-      });
+      console.log("Starting Google OAuth with params:", params);
 
       // Start the Google OAuth flow
       await client.oauth.google.start(params);
@@ -223,54 +254,6 @@ export const stytchService = {
       });
     } catch (error) {
       console.error("Error starting Apple OAuth:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Authenticate OAuth session
-   */
-  async authenticateOAuth(token: string, tokenType: string): Promise<void> {
-    const client = await ensureClient();
-    try {
-      // Always use the real OAuth token when provided
-      // Only simulate if we're in a test environment without a real token
-      if (
-        !token &&
-        stytchEnv === "test" &&
-        window.location.hostname === "localhost"
-      ) {
-        console.log(
-          "Test mode without token: Simulating successful OAuth authentication"
-        );
-        return this.simulateEmailLogin("test@example.com");
-      }
-
-      // Ensure token is a string and not undefined
-      if (!token || typeof token !== "string") {
-        console.error("Invalid token provided:", token);
-        throw new Error("Invalid token: Token must be a string");
-      }
-
-      console.log(
-        `Authenticating OAuth with token: ${token.substring(0, 10)}...`
-      );
-
-      // Log the token type and length for debugging
-      console.log(`Token type: ${typeof token}, length: ${token.length}`);
-
-      // Use the oauth.authenticate method for OAuth tokens
-      const response = await client.oauth.authenticate({
-        token: token,
-        session_duration_minutes: 60 * 24 * 7, // 1 week
-      });
-
-      console.log("OAuth authentication successful");
-
-      // Store the session token
-      authService.authenticateWithStytch(response.session_token);
-    } catch (error) {
-      console.error("Error authenticating with OAuth:", error);
       throw error;
     }
   },

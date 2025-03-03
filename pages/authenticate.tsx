@@ -18,8 +18,8 @@ const AuthenticatePage = () => {
 
         console.log("Authentication query params:", router.query);
 
-        // Get parameters from URL
-        const { token, stytch_token_type, code, state } = router.query;
+        // Get parameters from URL - following Stytch documentation
+        const { token, stytch_token_type } = router.query;
 
         // For debug purposes
         for (const [key, value] of Object.entries(router.query)) {
@@ -29,7 +29,7 @@ const AuthenticatePage = () => {
         // Dynamically import stytchService to avoid SSR issues
         const { stytchService } = await import("../utils/stytchService");
 
-        // Handle magic link authentication
+        // Handle magic link authentication - following Stytch docs
         if (token && stytch_token_type === "magic_links") {
           console.log("Processing magic link authentication");
           // Ensure token is a string
@@ -51,7 +51,7 @@ const AuthenticatePage = () => {
             })
           );
         }
-        // Handle OAuth authentication (Google, Apple)
+        // Handle OAuth authentication - following Stytch docs
         else if (token && stytch_token_type === "oauth") {
           console.log("Processing OAuth authentication with token");
 
@@ -73,31 +73,12 @@ const AuthenticatePage = () => {
             })
           );
         }
-        // Handle OAuth with code parameter
-        else if (code) {
-          console.log("Processing OAuth authentication with code");
-
-          // Ensure code is a string
-          const codeStr = Array.isArray(code) ? code[0] : code;
-
-          console.log("OAuth code:", codeStr);
-
-          if (!codeStr || typeof codeStr !== "string") {
-            throw new Error("Invalid OAuth code format");
-          }
-
-          await stytchService.authenticateOAuth(codeStr, "oauth");
-
-          // Send login event
-          window.dispatchEvent(
-            new CustomEvent("userLoggedIn", {
-              detail: { method: "oauth" },
-            })
-          );
-        }
         // No valid authentication parameters
         else {
-          throw new Error("No valid authentication parameters found");
+          console.warn("No valid authentication parameters found");
+          // Don't throw an error here, just redirect to home
+          router.push("/");
+          return;
         }
 
         // Redirect to home page after successful authentication
