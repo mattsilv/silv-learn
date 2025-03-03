@@ -19,8 +19,7 @@ const AuthenticatePage = () => {
         console.log("Authentication query params:", router.query);
 
         // Get parameters from URL
-        const { token, stytch_token_type, code, state, token_type } =
-          router.query;
+        const { token, stytch_token_type, code, state } = router.query;
 
         // For debug purposes
         for (const [key, value] of Object.entries(router.query)) {
@@ -53,10 +52,7 @@ const AuthenticatePage = () => {
           );
         }
         // Handle OAuth authentication (Google, Apple)
-        else if (
-          token &&
-          (stytch_token_type === "oauth" || token_type === "oauth")
-        ) {
+        else if (token && stytch_token_type === "oauth") {
           console.log("Processing OAuth authentication with token");
 
           // Ensure token is a string
