@@ -205,40 +205,37 @@ export const stytchService = {
 
   /**
    * Authenticate OAuth session
-   * Following Stytch documentation: https://stytch.com/docs/quickstarts/nextjs
+   * Following Stytch documentation: https://stytch.com/docs/api/oauth-authenticate
    */
-  async authenticateOAuth(
-    token: string | any,
-    tokenType: string
-  ): Promise<void> {
+  async authenticateOAuth(token: any, tokenType: string): Promise<void> {
     const client = await ensureClient();
+
     try {
-      // Ensure token is a string with explicit conversion
-      const tokenString = String(token);
+      // Convert token to string if it's not already
+      let tokenStr = token;
 
-      // Debug logging
-      console.log(`Token before conversion: ${typeof token}, value: ${token}`);
-      console.log(
-        `Token after conversion: ${typeof tokenString}, value: ${tokenString}`
-      );
-
-      if (
-        !tokenString ||
-        tokenString === "undefined" ||
-        tokenString === "null"
-      ) {
-        console.error("Invalid token provided:", token);
-        throw new Error("Invalid token: Token must be a string with content");
+      // Handle array case
+      if (Array.isArray(token)) {
+        tokenStr = token[0];
       }
 
-      console.log(
-        `Authenticating OAuth with token: ${tokenString.substring(0, 10)}...`
-      );
+      // Force to string type
+      tokenStr = String(tokenStr);
 
-      // Use the oauth.authenticate method for OAuth tokens
-      // Following Stytch documentation
+      console.log("OAuth token type before processing:", typeof token);
+      console.log("OAuth token value before processing:", token);
+      console.log("OAuth token type after processing:", typeof tokenStr);
+      console.log("OAuth token value after processing:", tokenStr);
+      console.log("OAuth token length:", tokenStr.length);
+
+      if (!tokenStr || tokenStr === "undefined" || tokenStr === "null") {
+        throw new Error("Invalid OAuth token: empty or invalid value");
+      }
+
+      // Use the raw client.oauth.authenticate method with a plain object
+      // This avoids any potential SDK validation issues
       const response = await client.oauth.authenticate({
-        token: tokenString,
+        token: tokenStr,
         session_duration_minutes: 60 * 24 * 7, // 1 week
       });
 
@@ -267,7 +264,7 @@ export const stytchService = {
 
       console.log("Starting Google OAuth with params:", params);
 
-      // Start the Google OAuth flow
+      // Start the OAuth flow
       await client.oauth.google.start(params);
     } catch (error) {
       console.error("Error starting Google OAuth:", error);
@@ -277,14 +274,21 @@ export const stytchService = {
 
   /**
    * Start OAuth flow for Apple
+   * Following Stytch documentation: https://stytch.com/docs/quickstarts/nextjs
    */
   async startAppleOAuth(): Promise<void> {
     const client = await ensureClient();
     try {
-      await client.oauth.apple.start({
+      // Configure OAuth parameters for Apple according to Stytch docs
+      const params = {
         login_redirect_url: `${window.location.origin}/authenticate`,
         signup_redirect_url: `${window.location.origin}/authenticate`,
-      });
+      };
+
+      console.log("Starting Apple OAuth with params:", params);
+
+      // Start the OAuth flow
+      await client.oauth.apple.start(params);
     } catch (error) {
       console.error("Error starting Apple OAuth:", error);
       throw error;
@@ -292,23 +296,19 @@ export const stytchService = {
   },
 
   /**
-   * Simulates email login for testing purposes
+   * Simulate email login for testing purposes
    * @param email The email to simulate login for
    */
   async simulateEmailLogin(email: string): Promise<void> {
-    try {
-      console.log("Simulating login for:", email);
+    // This is only for development/testing purposes
+    console.log("Simulating email login for:", email);
 
-      // In test mode, we'll just create a fake session token
-      const fakeSessionToken = `test-session-${Date.now()}`;
+    // Create a fake session token
+    const sessionToken = `session-${Math.random()
+      .toString(36)
+      .substring(2, 15)}`;
 
-      // Store the session token
-      await authService.authenticateWithStytch(fakeSessionToken);
-
-      console.log("Simulated login successful");
-    } catch (error) {
-      console.error("Error simulating email login:", error);
-      throw error;
-    }
+    // Store the session token
+    authService.authenticateWithStytch(sessionToken);
   },
 };
