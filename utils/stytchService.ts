@@ -189,23 +189,38 @@ export const stytchService = {
    * Authenticate OAuth session
    * Following Stytch documentation: https://stytch.com/docs/quickstarts/nextjs
    */
-  async authenticateOAuth(token: string, tokenType: string): Promise<void> {
+  async authenticateOAuth(
+    token: string | any,
+    tokenType: string
+  ): Promise<void> {
     const client = await ensureClient();
     try {
-      // Ensure token is a string and not undefined
-      if (!token || typeof token !== "string") {
+      // Ensure token is a string with explicit conversion
+      const tokenString = String(token);
+
+      // Debug logging
+      console.log(`Token before conversion: ${typeof token}, value: ${token}`);
+      console.log(
+        `Token after conversion: ${typeof tokenString}, value: ${tokenString}`
+      );
+
+      if (
+        !tokenString ||
+        tokenString === "undefined" ||
+        tokenString === "null"
+      ) {
         console.error("Invalid token provided:", token);
-        throw new Error("Invalid token: Token must be a string");
+        throw new Error("Invalid token: Token must be a string with content");
       }
 
       console.log(
-        `Authenticating OAuth with token: ${token.substring(0, 10)}...`
+        `Authenticating OAuth with token: ${tokenString.substring(0, 10)}...`
       );
 
       // Use the oauth.authenticate method for OAuth tokens
       // Following Stytch documentation
       const response = await client.oauth.authenticate({
-        token: token,
+        token: tokenString,
         session_duration_minutes: 60 * 24 * 7, // 1 week
       });
 

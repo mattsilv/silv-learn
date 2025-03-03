@@ -33,9 +33,12 @@ const AuthenticatePage = () => {
         if (token && stytch_token_type === "magic_links") {
           console.log("Processing magic link authentication");
           // Ensure token is a string
-          const tokenStr = Array.isArray(token) ? token[0] : token;
+          const tokenStr = Array.isArray(token) ? token[0] : String(token);
 
-          if (!tokenStr || typeof tokenStr !== "string") {
+          console.log("Magic link token type:", typeof tokenStr);
+          console.log("Magic link token value:", tokenStr);
+
+          if (!tokenStr) {
             throw new Error("Invalid token format");
           }
 
@@ -55,15 +58,20 @@ const AuthenticatePage = () => {
         else if (token && stytch_token_type === "oauth") {
           console.log("Processing OAuth authentication with token");
 
-          // Ensure token is a string
-          const tokenStr = Array.isArray(token) ? token[0] : token;
+          // Ensure token is a string with explicit conversion
+          const tokenStr = Array.isArray(token)
+            ? String(token[0])
+            : String(token);
 
-          console.log("OAuth token:", tokenStr);
+          console.log("OAuth token type:", typeof tokenStr);
+          console.log("OAuth token value:", tokenStr);
+          console.log("OAuth token length:", tokenStr.length);
 
-          if (!tokenStr || typeof tokenStr !== "string") {
+          if (!tokenStr) {
             throw new Error("Invalid OAuth token format");
           }
 
+          // Try with explicit string conversion
           await stytchService.authenticateOAuth(tokenStr, "oauth");
 
           // Send login event
