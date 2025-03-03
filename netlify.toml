@@ -7,4 +7,8 @@
   SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs" 
+  package = "@netlify/plugin-nextjs"
+
+# Cache Next.js build cache and node_modules
+[[plugins]]
+  package = "netlify-plugin-cache-nextjs" 
