@@ -1,7 +1,9 @@
 import { authService } from "./authService";
 
-// Initialize Stytch client with environment variables from Doppler
+// Initialize Stytch client with environment variables
 const publicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN || "";
+const stytchEnv = process.env.NEXT_PUBLIC_STYTCH_ENV || "test";
+console.log("Stytch Environment:", stytchEnv);
 console.log("Stytch Public Token:", publicToken);
 
 // Use dynamic import for Next.js compatibility
@@ -117,24 +119,16 @@ export const stytchService = {
     const client = await ensureClient();
 
     try {
-      // First, try to send the magic link
-      try {
-        await client.magicLinks.email.loginOrCreate({
-          email,
-          login_magic_link_url: `${window.location.origin}/authenticate`,
-          signup_magic_link_url: `${window.location.origin}/authenticate`,
-        });
-        console.log("Email magic link sent successfully");
-      } catch (error) {
-        console.warn(
-          "Could not send real magic link, using test mode fallback:",
-          error
-        );
-      }
+      // Send the magic link
+      await client.magicLinks.email.loginOrCreate({
+        email,
+        login_magic_link_url: `${window.location.origin}/authenticate`,
+        signup_magic_link_url: `${window.location.origin}/authenticate`,
+      });
+      console.log("Email magic link sent successfully");
 
-      // For test environment, always create a test magic link
-      if (process.env.NEXT_PUBLIC_STYTCH_ENV === "test") {
-        // In test mode, we can construct a test magic link
+      // For test environment only, create a test magic link
+      if (stytchEnv === "test") {
         const token = `ml-${Math.random().toString(36).substring(2, 15)}`;
         const magicLink = `${window.location.origin}/authenticate?token=${token}&stytch_token_type=magic_links`;
 
@@ -158,8 +152,8 @@ export const stytchService = {
     const client = await ensureClient();
 
     try {
-      // In test mode, we can just simulate a successful authentication
-      if (process.env.NEXT_PUBLIC_STYTCH_ENV === "test") {
+      // In test mode, we can simulate authentication
+      if (stytchEnv === "test" && window.location.hostname === "localhost") {
         console.log(
           "Test mode: Simulating successful magic link authentication"
         );
@@ -176,6 +170,80 @@ export const stytchService = {
       authService.authenticateWithStytch(response.session_token);
     } catch (error) {
       console.error("Error authenticating with magic link:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Start OAuth flow for Google
+   */
+  async startGoogleOAuth(): Promise<void> {
+    const client = await ensureClient();
+    try {
+      // Configure OAuth parameters for Google
+      const params = {
+        login_redirect_url: `${window.location.origin}/authenticate`,
+        signup_redirect_url: `${window.location.origin}/authenticate`,
+        // Add these additional parameters for better tracking
+        custom_scopes: ["profile", "email"],
+      };
+
+      // Log the OAuth parameters to help with debugging
+      console.log("Starting Google OAuth with params:", params);
+
+      // Start the Google OAuth flow
+      await client.oauth.google.start(params);
+    } catch (error) {
+      console.error("Error starting Google OAuth:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Start OAuth flow for Apple
+   */
+  async startAppleOAuth(): Promise<void> {
+    const client = await ensureClient();
+    try {
+      await client.oauth.apple.start({
+        login_redirect_url: `${window.location.origin}/authenticate`,
+        signup_redirect_url: `${window.location.origin}/authenticate`,
+      });
+    } catch (error) {
+      console.error("Error starting Apple OAuth:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Authenticate OAuth session
+   */
+  async authenticateOAuth(token: string, tokenType: string): Promise<void> {
+    const client = await ensureClient();
+    try {
+      // Always use the real OAuth token when provided
+      // Only simulate if we're in a test environment without a real token
+      if (
+        !token &&
+        stytchEnv === "test" &&
+        window.location.hostname === "localhost"
+      ) {
+        console.log(
+          "Test mode without token: Simulating successful OAuth authentication"
+        );
+        return this.simulateEmailLogin("test@example.com");
+      }
+
+      const response = await client.oauth.authenticate({
+        token: token,
+        stytch_token_type: tokenType,
+        session_duration_minutes: 60 * 24 * 7, // 1 week
+      });
+
+      // Store the session token
+      authService.authenticateWithStytch(response.session_token);
+    } catch (error) {
+      console.error("Error authenticating with OAuth:", error);
       throw error;
     }
   },

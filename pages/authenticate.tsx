@@ -14,11 +14,14 @@ const AuthenticatePage = () => {
     const authenticateUser = async () => {
       try {
         // Get token from URL
-        const { token, stytch_token_type } = router.query;
+        const { token, stytch_token_type, code, state } = router.query;
 
-        // Check if we have a valid token
-        if (!token || typeof token !== "string") {
-          setError("Invalid authentication token");
+        // Check if we have a valid authentication method
+        const hasToken = token && typeof token === "string";
+        const hasCode = code && typeof code === "string"; // Google OAuth returns code
+
+        if (!hasToken && !hasCode) {
+          setError("Invalid authentication parameters");
           setIsLoading(false);
           return;
         }
@@ -26,12 +29,32 @@ const AuthenticatePage = () => {
         // Dynamically import stytchService to avoid SSR issues
         const { stytchService } = await import("../utils/stytchService");
 
-        // Authenticate with the token
-        await stytchService.authenticateWithMagicLink(
-          token,
-          typeof stytch_token_type === "string"
-            ? stytch_token_type
-            : "magic_links"
+        // Handle different authentication methods
+        if (hasToken) {
+          const tokenType =
+            typeof stytch_token_type === "string"
+              ? stytch_token_type
+              : "magic_links";
+
+          if (tokenType === "oauth") {
+            // Handle OAuth authentication (Google, Apple)
+            await stytchService.authenticateOAuth(token, tokenType);
+          } else {
+            // Handle magic link authentication
+            await stytchService.authenticateWithMagicLink(token, tokenType);
+          }
+        } else if (hasCode) {
+          // Google OAuth with code flow
+          console.log("Authenticating with OAuth code flow");
+          const client = await import("@stytch/nextjs/headless");
+          // The authentication step happens automatically via Stytch SDK
+        }
+
+        // Dispatch event for successful login
+        window.dispatchEvent(
+          new CustomEvent("userLoggedIn", {
+            detail: { method: hasCode ? "google" : "email" },
+          })
         );
 
         // Redirect to home page after successful authentication
@@ -93,10 +116,10 @@ const AuthenticatePage = () => {
             </h2>
             <p className="mt-2 text-center text-gray-600">{error}</p>
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/")}
               className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
             >
-              Return to Login
+              Return to Home
             </button>
           </div>
         </div>

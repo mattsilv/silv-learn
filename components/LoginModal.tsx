@@ -126,20 +126,14 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     setIsLoading(true);
 
     try {
-      // For now, we'll simulate a successful Google sign-in
-      // In a real implementation, this would redirect to Google OAuth
-      setTimeout(() => {
-        // Simulate successful authentication
-        const mockSessionToken = "google-session-token";
-        authService.authenticateWithStytch(mockSessionToken);
-        onClose();
-        // Dispatch a custom event to notify other components that the user has logged in
-        window.dispatchEvent(
-          new CustomEvent("userLoggedIn", {
-            detail: { method: "google" },
-          })
-        );
-      }, 1000);
+      if (!stytchService) {
+        throw new Error("Stytch service not initialized");
+      }
+
+      // Use the actual Google OAuth method
+      await stytchService.startGoogleOAuth();
+
+      // The rest of the authentication will be handled by the redirect
     } catch (error) {
       console.error("Google sign-in error:", error);
       setError("An error occurred with Google sign-in. Please try again.");
@@ -152,20 +146,14 @@ const LoginModal = ({ onClose }: LoginModalProps) => {
     setIsLoading(true);
 
     try {
-      // For now, we'll simulate a successful Apple sign-in
-      // In a real implementation, this would redirect to Apple OAuth
-      setTimeout(() => {
-        // Simulate successful authentication
-        const mockSessionToken = "apple-session-token";
-        authService.authenticateWithStytch(mockSessionToken);
-        onClose();
-        // Dispatch a custom event to notify other components that the user has logged in
-        window.dispatchEvent(
-          new CustomEvent("userLoggedIn", {
-            detail: { method: "apple" },
-          })
-        );
-      }, 1000);
+      if (!stytchService) {
+        throw new Error("Stytch service not initialized");
+      }
+
+      // Use the actual Apple OAuth method
+      await stytchService.startAppleOAuth();
+
+      // The rest of the authentication will be handled by the redirect
     } catch (error) {
       console.error("Apple sign-in error:", error);
       setError("An error occurred with Apple sign-in. Please try again.");
