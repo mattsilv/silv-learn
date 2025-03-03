@@ -13,6 +13,9 @@ const AuthenticatePage = () => {
 
     const authenticateUser = async () => {
       try {
+        // Wait for router to be ready before accessing query params
+        if (!router.isReady) return;
+
         console.log("Authentication query params:", router.query);
 
         // Get parameters from URL
@@ -51,32 +54,43 @@ const AuthenticatePage = () => {
         }
         // Handle OAuth authentication (Google, Apple)
         else if (
-          (token &&
-            (stytch_token_type === "oauth" || token_type === "oauth")) ||
-          code
+          token &&
+          (stytch_token_type === "oauth" || token_type === "oauth")
         ) {
-          console.log("Processing OAuth authentication");
+          console.log("Processing OAuth authentication with token");
 
-          // For OAuth with token
-          if (token) {
-            const tokenStr = Array.isArray(token) ? token[0] : token;
+          // Ensure token is a string
+          const tokenStr = Array.isArray(token) ? token[0] : token;
 
-            if (!tokenStr || typeof tokenStr !== "string") {
-              throw new Error("Invalid OAuth token format");
-            }
+          console.log("OAuth token:", tokenStr);
 
-            await stytchService.authenticateOAuth(tokenStr, "oauth");
+          if (!tokenStr || typeof tokenStr !== "string") {
+            throw new Error("Invalid OAuth token format");
           }
-          // For OAuth with code (some providers use code instead of token)
-          else if (code) {
-            const codeStr = Array.isArray(code) ? code[0] : code;
 
-            if (!codeStr || typeof codeStr !== "string") {
-              throw new Error("Invalid OAuth code format");
-            }
+          await stytchService.authenticateOAuth(tokenStr, "oauth");
 
-            await stytchService.authenticateOAuth(codeStr, "oauth");
+          // Send login event
+          window.dispatchEvent(
+            new CustomEvent("userLoggedIn", {
+              detail: { method: "oauth" },
+            })
+          );
+        }
+        // Handle OAuth with code parameter
+        else if (code) {
+          console.log("Processing OAuth authentication with code");
+
+          // Ensure code is a string
+          const codeStr = Array.isArray(code) ? code[0] : code;
+
+          console.log("OAuth code:", codeStr);
+
+          if (!codeStr || typeof codeStr !== "string") {
+            throw new Error("Invalid OAuth code format");
           }
+
+          await stytchService.authenticateOAuth(codeStr, "oauth");
 
           // Send login event
           window.dispatchEvent(
@@ -99,12 +113,14 @@ const AuthenticatePage = () => {
       }
     };
 
-    // Only attempt authentication if we have query parameters
-    if (router.isReady && Object.keys(router.query).length > 0) {
-      authenticateUser();
-    } else if (router.isReady) {
-      // No query parameters, redirect to home
-      router.push("/");
+    // Only attempt authentication if router is ready
+    if (router.isReady) {
+      if (Object.keys(router.query).length > 0) {
+        authenticateUser();
+      } else {
+        // No query parameters, redirect to home
+        router.push("/");
+      }
     }
   }, [router.isReady, router.query]);
 

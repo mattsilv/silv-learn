@@ -191,11 +191,10 @@ export const stytchService = {
   async startGoogleOAuth(): Promise<void> {
     const client = await ensureClient();
     try {
-      // Configure OAuth parameters for Google
+      // Configure OAuth parameters for Google according to Stytch docs
       const params = {
         login_redirect_url: `${window.location.origin}/authenticate`,
         signup_redirect_url: `${window.location.origin}/authenticate`,
-        custom_scopes: ["profile", "email"],
       };
 
       // Log the OAuth parameters to help with debugging
@@ -249,18 +248,24 @@ export const stytchService = {
 
       // Ensure token is a string and not undefined
       if (!token || typeof token !== "string") {
+        console.error("Invalid token provided:", token);
         throw new Error("Invalid token: Token must be a string");
       }
 
       console.log(
-        `Authenticating OAuth with token: ${token.substring(0, 5)}...`
+        `Authenticating OAuth with token: ${token.substring(0, 10)}...`
       );
+
+      // Log the token type and length for debugging
+      console.log(`Token type: ${typeof token}, length: ${token.length}`);
 
       // Use the oauth.authenticate method for OAuth tokens
       const response = await client.oauth.authenticate({
         token: token,
         session_duration_minutes: 60 * 24 * 7, // 1 week
       });
+
+      console.log("OAuth authentication successful");
 
       // Store the session token
       authService.authenticateWithStytch(response.session_token);
