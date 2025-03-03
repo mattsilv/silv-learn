@@ -146,34 +146,40 @@ const LessonPage: NextPage<LessonPageProps> = ({ lesson }) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async () => {
   const slugs = await getAllLessonSlugs();
-  const paths = slugs.map((slug) => ({
-    params: { slug },
-  }));
 
   return {
-    paths,
-    fallback: true,
+    paths: slugs.map((slug) => ({
+      params: { slug },
+    })),
+    fallback: "blocking", // Show a loading state while the page is being generated
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const slug = params?.slug as string;
-  const lesson = await getLessonBySlug(slug);
+  try {
+    const slug = params?.slug as string;
+    const lesson = await getLessonBySlug(slug);
 
-  if (!lesson) {
+    if (!lesson) {
+      return {
+        notFound: true,
+      };
+    }
+
+    return {
+      props: {
+        lesson,
+      },
+      revalidate: 60, // Revalidate every 60 seconds
+    };
+  } catch (error) {
+    console.error(`Error fetching lesson with slug ${params?.slug}:`, error);
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      lesson,
-    },
-    revalidate: 60, // Revalidate every 60 seconds
-  };
 };
 
 export default LessonPage;

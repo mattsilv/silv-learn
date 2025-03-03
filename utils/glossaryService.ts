@@ -1,13 +1,36 @@
 import { GlossaryTerm } from "../types/glossary";
 import { Lesson } from "./lessonService";
 import glossaryData from "../data/glossary.json";
+import axios from "axios";
 
 /**
  * Get all glossary terms
  */
-export function getAllTerms(): GlossaryTerm[] {
+export const getAllTerms = (): GlossaryTerm[] => {
   return glossaryData as GlossaryTerm[];
-}
+};
+
+/**
+ * Get all glossary terms (async version for API compatibility)
+ */
+export const getAllTermsAsync = async (): Promise<GlossaryTerm[]> => {
+  // In production, fetch from the API
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL_PROD || "https://api.silv.app";
+      const response = await axios.get(`${apiUrl}/glossary`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching glossary from API:", error);
+      // Fallback to local data if API fails
+      return glossaryData as GlossaryTerm[];
+    }
+  }
+
+  // In development, use local data
+  return glossaryData as GlossaryTerm[];
+};
 
 /**
  * Get a specific term by ID

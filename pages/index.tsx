@@ -475,16 +475,27 @@ const Home: NextPage<HomeProps> = ({ lessons, topics }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const lessons = await getAllLessons();
-  const topics = await getAllTopics();
+  try {
+    const lessons = await getAllLessons();
+    const topics = await getAllTopics();
 
-  return {
-    props: {
-      lessons,
-      topics,
-    },
-    revalidate: 60, // Revalidate every 60 seconds
-  };
+    return {
+      props: {
+        lessons,
+        topics,
+      },
+      revalidate: 60, // Revalidate every 60 seconds
+    };
+  } catch (error) {
+    console.error("Error in getStaticProps:", error);
+    return {
+      props: {
+        lessons: [],
+        topics: [],
+      },
+      revalidate: 10, // Try again sooner if there was an error
+    };
+  }
 };
 
 export default Home;

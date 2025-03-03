@@ -1,4 +1,5 @@
 import lessonData from "../data/lessons.json";
+import axios from "axios";
 
 // Types
 export type ContentSection = {
@@ -70,6 +71,21 @@ export type Lesson = {
  * In a real app, this would fetch from an API or database
  */
 export const getAllLessons = async (): Promise<Lesson[]> => {
+  // In production, fetch from the API
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_API_URL_PROD || "https://api.silv.app";
+      const response = await axios.get(`${apiUrl}/lessons`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching lessons from API:", error);
+      // Fallback to local data if API fails
+      return lessonData as Lesson[];
+    }
+  }
+
+  // In development, use local data
   return lessonData as Lesson[];
 };
 
