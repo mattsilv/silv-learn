@@ -2,9 +2,27 @@ import { authService } from "./authService";
 
 // Initialize Stytch client with environment variables
 const publicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN || "";
-const stytchEnv = process.env.NEXT_PUBLIC_STYTCH_ENV || "test";
-console.log("Stytch Environment:", stytchEnv);
-console.log("Stytch Public Token:", publicToken);
+const stytchEnv = process.env.NEXT_PUBLIC_STYTCH_PROJECT_ENV || "test";
+
+// Enhanced environment variable logging
+console.log(
+  "ENV CHECK - Project Env:",
+  process.env.NEXT_PUBLIC_STYTCH_PROJECT_ENV
+);
+console.log(
+  "ENV CHECK - Project Env Type:",
+  typeof process.env.NEXT_PUBLIC_STYTCH_PROJECT_ENV
+);
+console.log(
+  "ENV CHECK - Public Token:",
+  process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
+);
+console.log(
+  "ENV CHECK - Public Token Type:",
+  typeof process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
+);
+console.log("ENV CHECK - Resolved Env:", stytchEnv);
+console.log("ENV CHECK - Resolved Token:", publicToken);
 
 // Use dynamic import for Next.js compatibility
 let stytchClient: any = null;

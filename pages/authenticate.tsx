@@ -11,6 +11,20 @@ const AuthenticatePage = () => {
     // Only run on the client side
     if (typeof window === "undefined") return;
 
+    // Log environment variables for debugging
+    console.log(
+      "ENV CHECK - Authenticate Page - Project Env:",
+      process.env.NEXT_PUBLIC_STYTCH_PROJECT_ENV
+    );
+    console.log(
+      "ENV CHECK - Authenticate Page - Public Token:",
+      process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
+    );
+    console.log(
+      "ENV CHECK - Authenticate Page - Token Type:",
+      typeof process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
+    );
+
     const authenticateUser = async () => {
       try {
         // Wait for router to be ready before accessing query params
