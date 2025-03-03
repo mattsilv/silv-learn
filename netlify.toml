@@ -5,10 +5,40 @@
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
   SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN"
+  # Enable SWC minification for faster builds
+  NEXT_WEBPACK_USESWC = "1"
+  # Increase memory limit for Node.js
+  NODE_OPTIONS = "--max_old_space_size=4096"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 # Cache Next.js build cache and node_modules
 [[plugins]]
-  package = "netlify-plugin-cache-nextjs" 
+  package = "netlify-plugin-cache-nextjs"
+  
+  [plugins.inputs]
+    # Specify directories to cache
+    cacheDirectories = [
+      ".next/cache",
+      "node_modules/.cache",
+      ".cache"
+    ]
+
+# Add compression for faster page loads
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Cache-Control = "public, max-age=3600"
+    
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable" 

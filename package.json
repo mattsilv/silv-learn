@@ -4,7 +4,7 @@
   "description": "A microlearning platform built with Next.js",
   "scripts": {
     "dev": "doppler run -- next dev",
-    "build": "next build",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "doppler run -- next start",
     "lint": "next lint"
   },
