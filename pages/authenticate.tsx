@@ -27,14 +27,23 @@ const AuthenticatePage = () => {
         const { stytchService } = await import("../utils/stytchService");
 
         // Handle magic link authentication
-        if (token && typeof token === "string") {
+        if (token) {
           console.log("Processing magic link authentication");
-          const tokenType =
-            typeof stytch_token_type === "string"
-              ? stytch_token_type
-              : "magic_links";
+          // Ensure token is a string
+          const tokenStr = Array.isArray(token) ? token[0] : token;
 
-          await stytchService.authenticateWithMagicLink(token, tokenType);
+          if (!tokenStr || typeof tokenStr !== "string") {
+            throw new Error("Invalid token format");
+          }
+
+          // Get token type, defaulting to magic_links
+          const tokenTypeStr = stytch_token_type
+            ? Array.isArray(stytch_token_type)
+              ? stytch_token_type[0]
+              : stytch_token_type
+            : "magic_links";
+
+          await stytchService.authenticateWithMagicLink(tokenStr, tokenTypeStr);
 
           // Send login event
           window.dispatchEvent(
@@ -44,12 +53,18 @@ const AuthenticatePage = () => {
           );
         }
         // Handle OAuth authentication (Google, Apple)
-        else if (code && typeof code === "string") {
-          console.log("Processing OAuth authentication with code:", code);
+        else if (code) {
+          console.log("Processing OAuth authentication with code");
+
+          // Ensure code is a string
+          const codeStr = Array.isArray(code) ? code[0] : code;
+
+          if (!codeStr || typeof codeStr !== "string") {
+            throw new Error("Invalid code format");
+          }
 
           // For OAuth with code, we need to use the stytchService
-          // The token is the code, and the token type is "oauth"
-          await stytchService.authenticateOAuth(code, "oauth");
+          await stytchService.authenticateOAuth(codeStr, "oauth");
 
           // Send login event
           window.dispatchEvent(

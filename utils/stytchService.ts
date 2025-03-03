@@ -160,10 +160,21 @@ export const stytchService = {
         return this.simulateEmailLogin("test@example.com");
       }
 
+      // Ensure token is a string and not undefined
+      if (!token || typeof token !== "string") {
+        throw new Error("Invalid token: Token must be a string");
+      }
+
+      console.log(
+        `Authenticating with token: ${token.substring(
+          0,
+          5
+        )}... (type: ${tokenType})`
+      );
+
       const response = await client.magicLinks.authenticate({
         token,
         session_duration_minutes: 60 * 24 * 7, // 1 week
-        stytch_token_type: tokenType,
       });
 
       // Store the session token
@@ -234,9 +245,17 @@ export const stytchService = {
         return this.simulateEmailLogin("test@example.com");
       }
 
+      // Ensure token is a string and not undefined
+      if (!token || typeof token !== "string") {
+        throw new Error("Invalid token: Token must be a string");
+      }
+
+      console.log(
+        `Authenticating OAuth with token: ${token.substring(0, 5)}...`
+      );
+
       const response = await client.oauth.authenticate({
         token: token,
-        stytch_token_type: tokenType,
         session_duration_minutes: 60 * 24 * 7, // 1 week
       });
 
