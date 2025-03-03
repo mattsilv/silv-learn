@@ -15,8 +15,9 @@ const AuthenticatePage = () => {
       try {
         console.log("Authentication query params:", router.query);
 
-        // Get parameters from URL - Google OAuth returns code and state
-        const { token, stytch_token_type, code, state } = router.query;
+        // Get parameters from URL
+        const { token, stytch_token_type, code, state, token_type } =
+          router.query;
 
         // For debug purposes
         for (const [key, value] of Object.entries(router.query)) {
@@ -27,7 +28,7 @@ const AuthenticatePage = () => {
         const { stytchService } = await import("../utils/stytchService");
 
         // Handle magic link authentication
-        if (token) {
+        if (token && stytch_token_type === "magic_links") {
           console.log("Processing magic link authentication");
           // Ensure token is a string
           const tokenStr = Array.isArray(token) ? token[0] : token;
@@ -36,14 +37,10 @@ const AuthenticatePage = () => {
             throw new Error("Invalid token format");
           }
 
-          // Get token type, defaulting to magic_links
-          const tokenTypeStr = stytch_token_type
-            ? Array.isArray(stytch_token_type)
-              ? stytch_token_type[0]
-              : stytch_token_type
-            : "magic_links";
-
-          await stytchService.authenticateWithMagicLink(tokenStr, tokenTypeStr);
+          await stytchService.authenticateWithMagicLink(
+            tokenStr,
+            "magic_links"
+          );
 
           // Send login event
           window.dispatchEvent(
@@ -53,18 +50,33 @@ const AuthenticatePage = () => {
           );
         }
         // Handle OAuth authentication (Google, Apple)
-        else if (code) {
-          console.log("Processing OAuth authentication with code");
+        else if (
+          (token &&
+            (stytch_token_type === "oauth" || token_type === "oauth")) ||
+          code
+        ) {
+          console.log("Processing OAuth authentication");
 
-          // Ensure code is a string
-          const codeStr = Array.isArray(code) ? code[0] : code;
+          // For OAuth with token
+          if (token) {
+            const tokenStr = Array.isArray(token) ? token[0] : token;
 
-          if (!codeStr || typeof codeStr !== "string") {
-            throw new Error("Invalid code format");
+            if (!tokenStr || typeof tokenStr !== "string") {
+              throw new Error("Invalid OAuth token format");
+            }
+
+            await stytchService.authenticateOAuth(tokenStr, "oauth");
           }
+          // For OAuth with code (some providers use code instead of token)
+          else if (code) {
+            const codeStr = Array.isArray(code) ? code[0] : code;
 
-          // For OAuth with code, we need to use the stytchService
-          await stytchService.authenticateOAuth(codeStr, "oauth");
+            if (!codeStr || typeof codeStr !== "string") {
+              throw new Error("Invalid OAuth code format");
+            }
+
+            await stytchService.authenticateOAuth(codeStr, "oauth");
+          }
 
           // Send login event
           window.dispatchEvent(

@@ -195,12 +195,14 @@ export const stytchService = {
       const params = {
         login_redirect_url: `${window.location.origin}/authenticate`,
         signup_redirect_url: `${window.location.origin}/authenticate`,
-        // Add these additional parameters for better tracking
         custom_scopes: ["profile", "email"],
       };
 
       // Log the OAuth parameters to help with debugging
-      console.log("Starting Google OAuth with params:", params);
+      console.log("Starting Google OAuth with params:", {
+        ...params,
+        origin: window.location.origin,
+      });
 
       // Start the Google OAuth flow
       await client.oauth.google.start(params);
@@ -254,6 +256,7 @@ export const stytchService = {
         `Authenticating OAuth with token: ${token.substring(0, 5)}...`
       );
 
+      // Use the oauth.authenticate method for OAuth tokens
       const response = await client.oauth.authenticate({
         token: token,
         session_duration_minutes: 60 * 24 * 7, // 1 week
