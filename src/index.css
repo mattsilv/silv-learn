@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add the dance animation */
+@keyframes danceMoves {
+  0%, 70% {
+    transform: rotate(0deg);
+  }
+  72% {
+    transform: rotate(-12deg);
+  }
+  74% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(18deg);
+  }
+  78% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(-18deg);
+  }
+  82% {
+    transform: rotate(12deg);
+  }
+  84% {
+    transform: rotate(-6deg);
+  }
+  86% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.dance-icon {
+  animation: danceMoves 5s infinite;
+  transform-origin: center;
+}
+
+/* Existing styles below if any */

@@ -4,8 +4,7 @@ import QuizPage from './pages/QuizPage';
 import ResultsPage from './pages/ResultsPage';
 import { ThemeSwitcher } from './components/common/ThemeSwitcher';
 import AppVersion from './components/common/AppVersion';
-import { Text } from './components/catalyst/text';
-import { Link } from './components/catalyst/link';
+import { FaPersonRunning, FaLaptopCode, FaGithub } from 'react-icons/fa6';
 
 function App() {
   return (
@@ -19,21 +18,29 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <div className="mt-auto border-t border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between items-center">
-            <ThemeSwitcher />
-            <div className="p-4">
-              <AppVersion />
-            </div>
+        <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8 mb-4 flex items-center justify-center gap-2 print:hidden">
+          <div className="flex items-center gap-1">
+            micro app vibe coded{" "}
+            <FaPersonRunning className="inline text-blue-400 text-lg dance-icon" />{" "}
+            <FaLaptopCode className="inline text-blue-500 text-lg" /> by{" "}
+            <a
+              href="https://www.silv.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              silv.app
+            </a>
           </div>
-          <div className="text-center pb-6 text-sm text-gray-500 dark:text-gray-400">
-            <Text>
-              this is an app vibe coded by {' '}
-              <Link href="https://silv.app" target="_blank" rel="noopener noreferrer">
-                silv.app
-              </Link>
-            </Text>
-          </div>
+          <span className="mx-2">|</span>
+          <a
+            href="https://github.com/mattsilv/silv-learn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          >
+            <FaGithub className="inline text-lg" /> GitHub
+          </a>
         </div>
       </div>
     </BrowserRouter>
