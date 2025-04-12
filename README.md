@@ -77,3 +77,16 @@ Common reasons for build failures, especially on deployment platforms like Netli
     *   **Solution:** Try adding the problematic import path to `optimizeDeps.include` in `vite.config.ts`. For example: `optimizeDeps: { include: ['react-icons/fa'] }`.
 
 **General Tip:** Always run `pnpm build` and `pnpm lint` locally before pushing changes to catch potential build errors early.
+
+## Development
+
+### Testing
+
+This project uses [Vitest](https://vitest.dev/) for unit and integration testing.
+
+- **File Naming:** Test files should be named `*.test.ts` or `*.test.tsx`.
+- **Location:** 
+    - For utility functions (in `src/utils/`), create the corresponding `.test.ts` file in the *same* `src/utils/` directory.
+    - For components (in `src/components/`), create the corresponding `.test.tsx` file within a `__tests__` subdirectory inside the specific component's folder (e.g., `src/components/quiz/__tests__/QuestionCard.test.tsx`).
+    - For hooks (in `src/hooks/`), create the corresponding `.test.ts` file in the *same* `src/hooks/` directory.
+- **Running Tests:** Use `pnpm test` or `pnpm test:watch`.

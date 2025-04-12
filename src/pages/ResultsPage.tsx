@@ -5,21 +5,7 @@ import { calculateLearningStyle } from '../utils/calculateLearningStyle';
 import { Button } from '../components/catalyst/button';
 import { AnswerSelections, QuizData, LearningStyleResults } from '../types/quiz';
 import quizData from '../data/learning-style.json'; // Import quiz data to map answers
-
-// Helper function (can be moved to utils if preferred)
-const decodeAnswersFromQuery = (queryString: string): AnswerSelections => {
-  const params = new URLSearchParams(queryString);
-  const decodedAnswers: AnswerSelections = {};
-  for (const [key, value] of params.entries()) {
-    if (key.startsWith('q')) {
-      const questionId = parseInt(key.substring(1), 10);
-      if (!isNaN(questionId) && value) {
-        decodedAnswers[questionId] = value.split(',');
-      }
-    }
-  }
-  return decodedAnswers;
-};
+import { decodeAnswersFromQuery } from '../utils/quizUrlUtils'; // Import from utils
 
 // Helper function to calculate scores from answers
 const calculateScoresFromAnswers = (
