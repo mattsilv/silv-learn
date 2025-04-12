@@ -31,7 +31,7 @@ const WelcomePage: React.FC = () => {
         </div>
         
         <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
-          <Heading level={3}>Reading/Writing</Heading>
+          <Heading level={3}>Text</Heading>
           <Text>Learn through interaction with text</Text>
         </div>
         
