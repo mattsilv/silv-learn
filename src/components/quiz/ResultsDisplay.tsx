@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Heading } from '../catalyst/heading';
 import { Text } from '../catalyst/text';
 import { LearningStyleResults } from '../../types/quiz';
@@ -7,52 +7,49 @@ import { Field, Label } from '../catalyst/fieldset';
 import { Button } from '../catalyst/button';
 import { Input } from '../catalyst/input';
 
+// Define type for individual result items derived from LearningStyleResults
+// (Keep this type if it's still needed locally, otherwise remove)
+type StyleResult = {
+  style: string;
+  score: number;
+  percentage: number;
+  description: string;
+};
+
 interface ResultsDisplayProps {
   results: LearningStyleResults;
-  llmPrompt: string;
+  finalPrompt: string;
+  topic: string;
+  handleTopicChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCopy: () => void;
   isCopied: boolean;
 }
 
-// Define type for individual result items
-type StyleResult = LearningStyleResults[keyof Omit<LearningStyleResults, 'multimodal'>]; // Test comment
-
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ 
   results, 
-  llmPrompt: originalPrompt, 
+  finalPrompt,
+  topic,
+  handleTopicChange,
   handleCopy, 
   isCopied 
 }) => {
-  const [topic, setTopic] = useState<string>("How does quantum computing work");
-  const [llmPrompt, setLlmPrompt] = useState<string>(originalPrompt);
-  
-  // Update the prompt when topic changes
-  useEffect(() => {
-    // Replace all instances of "[Insert your topic here]" with the actual topic
-    const updatedPrompt = originalPrompt.replace(/\[Insert your topic here\]/g, topic);
-    setLlmPrompt(updatedPrompt);
-  }, [topic, originalPrompt]);
-  
-  const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTopic(e.target.value);
-  };
   // Sort non-multimodal results by score (highest first)
   const sortedStyles: StyleResult[] = Object.values(results)
-    .filter((r): r is StyleResult => !!r && r.style !== 'Multimodal')
+    .filter((r): r is StyleResult => !!r && typeof r === 'object' && 'style' in r && r.style !== 'Multimodal')
     .sort((a, b) => b.score - a.score);
 
   // Get the single highest scoring style
-  const topStyle = sortedStyles[0]; 
+  const topStyle = sortedStyles[0];
 
   // Check if multimodal was triggered (multiple styles close to top)
   const hasMultimodal = 'multimodal' in results;
 
   // Get all styles including multimodal for the breakdown list
   const allStylesForBreakdown = Object.values(results)
-    .filter(r => !!r && !isNaN(r.percentage))
-    .sort((a, b) => b.score - a.score); // Sort by score for display order
+    .filter(r => !!r && 'percentage' in r && !isNaN(r.percentage))
+    .sort((a, b) => ('score' in a && 'score' in b) ? b.score - a.score : 0); // Sort by score for display order
 
-  if (!topStyle) { // Handle edge case where no styles scored
+  if (!topStyle) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-3xl mx-auto text-center">
         <Heading level={1} className="mb-4">No results to display.</Heading>
@@ -90,22 +87,24 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
       </Heading>
       
       {allStylesForBreakdown.map((result) => (
-        <div key={result.style} className="mb-4">
-          <div className="flex justify-between items-center mb-1">
-            <span className="font-medium">
-              <Text>{result.style}</Text>
-            </span>
-            <span>
-              <Text>{result.percentage}%</Text>
-            </span>
+        ('style' in result && 'percentage' in result) && (
+          <div key={result.style} className="mb-4">
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-medium">
+                <Text>{result.style}</Text>
+              </span>
+              <span>
+                <Text>{result.percentage}%</Text>
+              </span>
+            </div>
+            <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-indigo-600 dark:bg-indigo-500"
+                style={{ width: `${result.percentage}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-indigo-600 dark:bg-indigo-500"
-              style={{ width: `${result.percentage}%` }}
-            ></div>
-          </div>
-        </div>
+        )
       ))}
       
       {/* Learning Tips and LLM Prompt Section (Combined) */}
@@ -208,7 +207,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
             <Textarea 
               id="customized-prompt"
               readOnly 
-              value={llmPrompt} 
+              value={finalPrompt}
               rows={14}
               style={{ 
                 padding: '0.75rem',
@@ -223,7 +222,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
           <div className="mt-3 flex justify-center">
             <Button 
               color="indigo" 
-              onClick={handleCopy} 
+              onClick={handleCopy}
               aria-label="Copy prompt"
               className="inline-flex items-center justify-center rounded px-3 py-1.5 text-sm font-semibold shadow-sm"
             >

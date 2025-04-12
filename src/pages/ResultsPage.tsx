@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ResultsDisplay from '../components/quiz/ResultsDisplay';
 import { calculateLearningStyle } from '../utils/calculateLearningStyle';
@@ -60,40 +60,31 @@ type StyleResult = {
 
 // Function to generate the LLM prompt
 const generateLLMPrompt = (results: LearningStyleResults): string => {
-    // Check if multimodal exists and use it as the primary approach
     const hasMultimodal = results.multimodal !== undefined;
-    
-    // Filter and sort learning styles by percentage
     const sortedStyles = Object.values(results)
         .filter((r): r is StyleResult => 
-            !!r && 
-            typeof r === 'object' && 
-            'style' in r && 
-            r.style !== 'Multimodal' && 
-            !isNaN(r.percentage) && 
-            r.percentage > 0 // Only include styles with a score > 0%
+            !!r && typeof r === 'object' && 'style' in r && r.style !== 'Multimodal' && !isNaN(r.percentage) && r.percentage > 0
         )
         .sort((a, b) => b.percentage - a.percentage);
 
     if (sortedStyles.length === 0) {
-        return "No specific learning style preferences detected from the assessment.";
+        return "No specific learning style preferences detected.";
     }
 
     const styleList = sortedStyles.map((style, index) => 
         `${index + 1}. ${style.style} (${style.percentage}%): ${style.description}`
-    ).join('\n'); // Use \n for newlines in the prompt text
+    ).join('\n');
 
-    // Use this variable as a placeholder - users will replace with their topic
-    const topic = "[Insert your topic here]";
+    // Define the placeholder just once for the end
+    const topicPlaceholder = "[Insert your topic here]"; 
 
-    // Build a more detailed prompt that teaches LLMs how to accommodate learning styles
     let prompt = `My learning style assessment results:\n\n${styleList}\n\n`;
     
-    // Add specific instructions based on whether the user is multimodal or has a dominant style
     if (hasMultimodal) {
         prompt += `I have a multimodal learning preference with strengths in multiple areas. ${results.multimodal!.description}\n\n`;
-        prompt += `When explaining "${topic}", please:\n\n`;
-        prompt += `1. Start with a brief overview using mixed modalities to engage all my learning styles\n`;
+        // Modify instruction line - remove placeholder
+        prompt += `When explaining the topic below, please:\n\n`; 
+        prompt += `1. Start with a brief overview using mixed modalities...\n`;
         prompt += `2. For complex concepts, present information in multiple formats:\n`;
         
         // Add specific strategies for each of their top styles
@@ -112,12 +103,11 @@ const generateLLMPrompt = (results: LearningStyleResults): string => {
         prompt += `3. Connect new information to practical applications and real-world contexts\n`;
         prompt += `4. Summarize key points at the end using multiple approaches\n\n`;
     } else {
-        // Single dominant style approach
         const primaryStyle = sortedStyles[0];
         const secondaryStyles = sortedStyles.slice(1, 3);
-        
         prompt += `My primary learning style is ${primaryStyle.style} (${primaryStyle.percentage}%).\n\n`;
-        prompt += `When explaining "${topic}", please:\n\n`;
+        // Modify instruction line - remove placeholder
+        prompt += `When explaining the topic below, please:\n\n`; 
         
         // Add specific strategies for their primary style
         if (primaryStyle.style === 'Visual') {
@@ -159,7 +149,8 @@ const generateLLMPrompt = (results: LearningStyleResults): string => {
         }
     }
     
-    prompt += `\nTopic to explain: ${topic}`;
+    // Append the placeholder only at the very end
+    prompt += `\nTopic to explain: ${topicPlaceholder}`;
     
     return prompt;
 };
@@ -169,6 +160,8 @@ const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
   const [data] = React.useState<QuizData>(quizData as QuizData);
   const [isCopied, setIsCopied] = useState(false);
+  const [topic, setTopic] = useState<string>("How does quantum computing work"); // State for topic input
+  const [finalPrompt, setFinalPrompt] = useState<string>(''); // State for the final, updated prompt
 
   // Decode answers from URL
   const answers = useMemo(() => decodeAnswersFromQuery(location.search), [location.search]);
@@ -182,7 +175,8 @@ const ResultsPage: React.FC = () => {
   // Calculate learning style based on scores
   const results = useMemo(() => {
     if (hasValidAnswers) {
-      const hasScores = Object.values(scores).some(score => score > 0);
+      // Add type guard for score check
+      const hasScores = Object.values(scores).some((score): score is number => typeof score === 'number' && score > 0);
       if (hasScores) {
         return calculateLearningStyle(scores);
       }
@@ -190,14 +184,34 @@ const ResultsPage: React.FC = () => {
     return null;
   }, [scores, hasValidAnswers]);
 
-  // Generate the prompt string using the updated function
-  const llmPrompt = useMemo(() => {
+  // Generate the BASE prompt string (with placeholder)
+  const basePrompt = useMemo(() => {
     return results ? generateLLMPrompt(results) : 'Please complete the quiz to generate a learning prompt.';
   }, [results]);
 
-  // Handle copy to clipboard
+  // Update the final prompt whenever the basePrompt or topic changes
+  useEffect(() => {
+    const placeholder = "[Insert your topic here]";
+    // Use a specific regex targeting only the placeholder at the end
+    const topicLineRegex = new RegExp(`(\\nTopic to explain: )${placeholder.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`);
+
+    if (basePrompt && results) {
+        const currentTopic = topic || placeholder; // Use placeholder if topic is empty
+        const updatedPrompt = basePrompt.replace(topicLineRegex, `$1${currentTopic}`);
+        setFinalPrompt(updatedPrompt);
+    } else {
+        setFinalPrompt(basePrompt); // Fallback if no results or base prompt
+    }
+  }, [basePrompt, topic, results]);
+
+   // Handle topic input change (Passed down to ResultsDisplay)
+  const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTopic(e.target.value);
+  };
+
+  // Handle copy to clipboard - now copies the finalPrompt state
   const handleCopy = () => {
-    navigator.clipboard.writeText(llmPrompt).then(() => {
+    navigator.clipboard.writeText(finalPrompt).then(() => { // Use finalPrompt
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
     }).catch(err => {
@@ -228,7 +242,9 @@ const ResultsPage: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <ResultsDisplay 
         results={results} 
-        llmPrompt={llmPrompt}
+        finalPrompt={finalPrompt}
+        topic={topic}
+        handleTopicChange={handleTopicChange}
         handleCopy={handleCopy}
         isCopied={isCopied}
       />
