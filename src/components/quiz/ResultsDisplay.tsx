@@ -7,8 +7,6 @@ import { Field, Label } from '../catalyst/fieldset';
 import { Button } from '../catalyst/button';
 import { Input } from '../catalyst/input';
 
-import clsx from 'clsx';
-
 interface ResultsDisplayProps {
   results: LearningStyleResults;
   llmPrompt: string;
@@ -17,7 +15,7 @@ interface ResultsDisplayProps {
 }
 
 // Define type for individual result items
-type StyleResult = LearningStyleResults[keyof Omit<LearningStyleResults, 'multimodal'>];
+type StyleResult = LearningStyleResults[keyof Omit<LearningStyleResults, 'multimodal'>]; // Test comment
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ 
   results, 
