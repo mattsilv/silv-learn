@@ -1,6 +1,6 @@
 # Learning Style Quiz App
 
-This is a simple web application designed to help users identify their primary learning style (Visual, Auditory, Reading/Writing, or Kinesthetic) through a short quiz.
+A simple web application designed to help users identify their primary learning style (Visual, Auditory, Reading/Writing, or Kinesthetic) through a short quiz.
 
 ## Features
 
