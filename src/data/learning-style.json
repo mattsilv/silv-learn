@@ -1,0 +1,68 @@
+{
+  "title": "What's Your Learning Style?",
+  "instructions": "For each question, select ALL the options that apply to you.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "When you're trying to remember something, you usually...",
+      "options": [
+        { "id": "A", "text": "Picture it or visualize it in your mind" },
+        { "id": "B", "text": "Repeat the information aloud or in your head" },
+        { "id": "C", "text": "Write it down or read about it again" },
+        {
+          "id": "D",
+          "text": "Try doing it physically or practice with hands-on activities"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "In a classroom or presentation, you prefer the teacher to...",
+      "options": [
+        { "id": "A", "text": "Use diagrams, charts, or videos" },
+        { "id": "B", "text": "Explain things verbally and give examples" },
+        { "id": "C", "text": "Provide written handouts or reading materials" },
+        {
+          "id": "D",
+          "text": "Include interactive activities or demonstrations"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "When studying for an exam, you...",
+      "options": [
+        { "id": "A", "text": "Use mind maps, flowcharts, or draw out ideas" },
+        {
+          "id": "B",
+          "text": "Talk through the material with others or out loud to yourself"
+        },
+        { "id": "C", "text": "Review notes, textbooks, or write summaries" },
+        { "id": "D", "text": "Use flashcards or hands-on practice questions" }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "You find it easiest to learn new skills when...",
+      "options": [
+        { "id": "A", "text": "You see someone demonstrate them first" },
+        { "id": "B", "text": "Someone verbally explains each step to you" },
+        {
+          "id": "C",
+          "text": "You read or write out the instructions carefully"
+        },
+        { "id": "D", "text": "You get to try it yourself through practice" }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Which activity do you enjoy most when exploring new information?",
+      "options": [
+        { "id": "A", "text": "Watching videos or looking at images" },
+        { "id": "B", "text": "Listening to podcasts or discussions" },
+        { "id": "C", "text": "Reading articles or taking notes" },
+        { "id": "D", "text": "Conducting experiments or hands-on activities" }
+      ]
+    }
+  ]
+}
