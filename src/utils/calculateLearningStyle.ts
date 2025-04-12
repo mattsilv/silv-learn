@@ -45,25 +45,25 @@ export function calculateLearningStyle(
   const results: LearningStyleResults = {
     visual: {
       style: 'Visual',
-      description: 'You learn best through seeing and visualizing information. Use diagrams, charts, images, and color-coding to enhance your learning.',
+      description: 'You learn best through seeing and visualizing information. Use diagrams, charts, images, and color-coding to enhance your comprehension and retention.',
       score: counts.a,
       percentage: Math.round((counts.a / total) * 100)
     },
     auditory: {
       style: 'Auditory',
-      description: 'You learn best through listening and verbal communication. Consider recording lessons, discussing topics, or reading aloud.',
+      description: 'You learn best through listening and verbal communication. Consider recorded lectures, discussions, podcasts, and explaining concepts aloud to reinforce understanding.',
       score: counts.b,
       percentage: Math.round((counts.b / total) * 100)
     },
     reading: {
       style: 'Reading/Writing',
-      description: 'You learn best through reading and writing information. Make lists, take detailed notes, and rewrite information in your own words.',
+      description: 'You learn best through interacting with text. Reading thoroughly, taking organized notes, creating summaries, and expressing concepts in writing helps you process information effectively.',
       score: counts.c,
       percentage: Math.round((counts.c / total) * 100)
     },
     kinesthetic: {
       style: 'Kinesthetic',
-      description: 'You learn best through hands-on activities and physical movement. Try practical exercises, role-playing, and physical engagement with material.',
+      description: 'You learn best through hands-on experiences and physical engagement. Interactive simulations, practical applications, and learning by doing help you master new concepts most effectively.',
       score: counts.d,
       percentage: Math.round((counts.d / total) * 100)
     }
@@ -83,7 +83,7 @@ export function calculateLearningStyle(
     const stylesString = topStyles.map(style => style.style).join(', ');
     results.multimodal = {
       style: 'Multimodal',
-      description: `You have a balanced learning style across multiple approaches: ${stylesString}. This flexibility allows you to adapt to different teaching methods.`,
+      description: `You have a well-balanced learning profile across multiple approaches: ${stylesString}. This cognitive flexibility is a significant advantage that allows you to adapt to various teaching methods and learning environments. For optimal learning, try combining strategies from each of your strongest styles and vary your approach based on the material.`,
       score: Math.max(...topStyles.map(style => style.score)),
       percentage: Math.round((topStyles.reduce((sum, style) => sum + style.score, 0) / (topStyles.length * total)) * 100)
     };

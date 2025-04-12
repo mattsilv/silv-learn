@@ -60,7 +60,10 @@ type StyleResult = {
 
 // Function to generate the LLM prompt
 const generateLLMPrompt = (results: LearningStyleResults): string => {
-    // Filter out non-styles and multimodal if present, then sort by percentage
+    // Check if multimodal exists and use it as the primary approach
+    const hasMultimodal = results.multimodal !== undefined;
+    
+    // Filter and sort learning styles by percentage
     const sortedStyles = Object.values(results)
         .filter((r): r is StyleResult => 
             !!r && 
@@ -80,10 +83,84 @@ const generateLLMPrompt = (results: LearningStyleResults): string => {
         `${index + 1}. ${style.style} (${style.percentage}%): ${style.description}`
     ).join('\n'); // Use \n for newlines in the prompt text
 
-    const specificTopic = "how generative AI in chat works"; // Define the specific topic
+    // Use this variable as a placeholder - users will replace with their topic
+    const topic = "[Insert your topic here]";
 
-    const prompt = `My learning profile based on a recent assessment suggests the following preferences, ranked by strength:\n\n${styleList}\n\nPlease explain the topic primarily using methods suited for the top style (${sortedStyles[0].style}). Where appropriate, also incorporate techniques beneficial for the secondary style(s) listed, adapting the explanation to leverage multiple modalities based on this ranking. Focus on optimizing the explanation for my learning style(s).\n\nTopic: ${specificTopic}`;
-
+    // Build a more detailed prompt that teaches LLMs how to accommodate learning styles
+    let prompt = `My learning style assessment results:\n\n${styleList}\n\n`;
+    
+    // Add specific instructions based on whether the user is multimodal or has a dominant style
+    if (hasMultimodal) {
+        prompt += `I have a multimodal learning preference with strengths in multiple areas. ${results.multimodal!.description}\n\n`;
+        prompt += `When explaining "${topic}", please:\n\n`;
+        prompt += `1. Start with a brief overview using mixed modalities to engage all my learning styles\n`;
+        prompt += `2. For complex concepts, present information in multiple formats:\n`;
+        
+        // Add specific strategies for each of their top styles
+        sortedStyles.slice(0, 2).forEach(style => {
+            if (style.style === 'Visual') {
+                prompt += `   - Include visual metaphors, diagrams, or mental imagery I can visualize\n`;
+            } else if (style.style === 'Auditory') {
+                prompt += `   - Frame explanations conversationally as if we're discussing the topic\n`;
+            } else if (style.style === 'Reading/Writing') {
+                prompt += `   - Provide clear, well-structured explanations with key points emphasized\n`;
+            } else if (style.style === 'Kinesthetic') {
+                prompt += `   - Include practical examples, interactive thought experiments, or analogies to physical experiences\n`;
+            }
+        });
+        
+        prompt += `3. Connect new information to practical applications and real-world contexts\n`;
+        prompt += `4. Summarize key points at the end using multiple approaches\n\n`;
+    } else {
+        // Single dominant style approach
+        const primaryStyle = sortedStyles[0];
+        const secondaryStyles = sortedStyles.slice(1, 3);
+        
+        prompt += `My primary learning style is ${primaryStyle.style} (${primaryStyle.percentage}%).\n\n`;
+        prompt += `When explaining "${topic}", please:\n\n`;
+        
+        // Add specific strategies for their primary style
+        if (primaryStyle.style === 'Visual') {
+            prompt += `1. Use rich visual descriptions, metaphors, and imagery I can visualize\n`;
+            prompt += `2. Describe diagrams, charts, or visual relationships between concepts\n`;
+            prompt += `3. Organize information with clear visual structure (hierarchies, sequences, relationships)\n`;
+        } else if (primaryStyle.style === 'Auditory') {
+            prompt += `1. Use a conversational tone as if we're discussing the topic verbally\n`;
+            prompt += `2. Explain concepts through analogies, stories, and verbal examples\n`;
+            prompt += `3. Repeat key points in different ways to reinforce auditory processing\n`;
+        } else if (primaryStyle.style === 'Reading/Writing') {
+            prompt += `1. Provide well-structured, logical explanations with clear terminology\n`;
+            prompt += `2. Present information in organized lists, paragraphs, and sections\n`;
+            prompt += `3. Define terms precisely and use written explanations rather than analogies\n`;
+        } else if (primaryStyle.style === 'Kinesthetic') {
+            prompt += `1. Include practical examples and real-world applications\n`;
+            prompt += `2. Use interactive thought experiments that let me mentally "do" something\n`;
+            prompt += `3. Connect concepts to physical experiences or hands-on activities\n`;
+        }
+        
+        // Add supplementary approaches if they have secondary styles
+        if (secondaryStyles.length > 0) {
+            prompt += `\nAdditionally, please incorporate some elements that support my secondary learning style(s):\n`;
+            secondaryStyles.forEach(style => {
+                if (style.percentage >= 15) { // Only include meaningful secondary styles
+                    prompt += `- ${style.style} (${style.percentage}%): `;
+                    
+                    if (style.style === 'Visual') {
+                        prompt += `Include some visual descriptions or spatial relationships\n`;
+                    } else if (style.style === 'Auditory') {
+                        prompt += `Include some conversational elements or verbal explanations\n`;
+                    } else if (style.style === 'Reading/Writing') {
+                        prompt += `Include some structured text explanations or defined terminology\n`;
+                    } else if (style.style === 'Kinesthetic') {
+                        prompt += `Include some practical applications or interactive elements\n`;
+                    }
+                }
+            });
+        }
+    }
+    
+    prompt += `\nTopic to explain: ${topic}`;
+    
     return prompt;
 };
 
@@ -164,10 +241,21 @@ const ResultsPage: React.FC = () => {
       </div>
 
       <div className="mt-8 text-center">
-        <p className="text-sm text-gray-500">
-          Share your results by copying this URL
+        <p className="text-sm text-gray-500 mb-1">
+          Share your results by copying this URL:
         </p>
-        {/* Optional: Add a button to copy URL */}
+        <div className="flex justify-center">
+          <div 
+            className="text-xs bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-md inline-block max-w-full overflow-x-auto whitespace-nowrap font-mono cursor-pointer"
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              alert('URL copied to clipboard!');
+            }}
+            title="Click to copy URL"
+          >
+            {window.location.href}
+          </div>
+        </div>
       </div>
     </div>
   );

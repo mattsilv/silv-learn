@@ -13,11 +13,20 @@ const WelcomePage: React.FC = () => {
         Learning Style Quiz
       </Heading>
       
-      <Text className="mb-8 max-w-2xl mx-auto">
+      <Text className="mb-4 max-w-2xl mx-auto">
         Everyone learns differently! Take this quick quiz to discover your
         unique learning style and get personalized tips to improve your
         learning experience.
       </Text>
+      
+      <div className="mb-8 bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg border border-indigo-100 dark:border-indigo-800 max-w-2xl mx-auto">
+        <Heading level={4} className="mb-2 text-indigo-700 dark:text-indigo-300">AI-Powered Learning</Heading>
+        <Text className="text-indigo-700 dark:text-indigo-300">
+          After completing the quiz, we'll generate a personalized AI prompt based on your learning style!
+          Simply paste this custom prompt into ChatGPT, Claude, or your favorite AI assistant to learn any subject
+          in a way that's optimized for how you learn best.
+        </Text>
+      </div>
       
       <div className="mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
         <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-100 dark:border-purple-800">
@@ -45,7 +54,7 @@ const WelcomePage: React.FC = () => {
         <Button 
           href="/quiz/1" 
           color={PRIMARY_BUTTON_COLOR} 
-          className="text-lg px-6 py-3 shadow-md hover:shadow-lg transition-all"
+          className="text-2xl px-8 py-4 shadow-md hover:shadow-lg transition-all"
         >
           Start Quiz Now
         </Button>
