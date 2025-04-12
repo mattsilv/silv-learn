@@ -43,7 +43,6 @@ export function useQuizState() {
     decodeAnswersFromQuery(location.search)
   );
   const [data] = useState<QuizData>(quizData as QuizData);
-  const [isLoading, setIsLoading] = useState(false); // Placeholder for potential async data loading
 
   const currentQuestion = data.questions.find(q => q.id === currentQuestionNumber);
   const totalQuestions = data.questions.length;
@@ -135,7 +134,6 @@ export function useQuizState() {
     isFirstQuestion,
     isLastQuestion,
     progress,
-    isLoading,
     answers, // Expose raw answers if needed
     toggleAnswer,
     isOptionSelected,

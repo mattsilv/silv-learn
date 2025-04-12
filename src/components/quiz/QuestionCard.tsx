@@ -21,7 +21,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       </Heading>
       
       <div className="mb-4">
-        <Text weight="medium" className="text-lg">Select all that apply:</Text>
+        <Text className="text-lg font-medium">Select all that apply:</Text>
       </div>
       
       <div className="space-y-4">

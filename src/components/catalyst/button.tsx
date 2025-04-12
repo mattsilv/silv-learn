@@ -88,9 +88,9 @@ const styles = {
       '[--btn-icon:var(--color-zinc-400)] data-active:[--btn-icon:var(--color-zinc-300)] data-hover:[--btn-icon:var(--color-zinc-300)]',
     ],
     indigo: [
-      'text-white [--btn-hover-overlay:var(--color-white)]/10 [--btn-bg:var(--color-indigo-500)] [--btn-border:var(--color-indigo-600)]/90',
-      'dark:text-white dark:[--btn-bg:var(--color-indigo-500)] dark:[--btn-hover-overlay:var(--color-white)]/5',
-      '[--btn-icon:var(--color-indigo-300)] data-active:[--btn-icon:var(--color-indigo-200)] data-hover:[--btn-icon:var(--color-indigo-200)]',
+      'text-indigo-950 [--btn-hover-overlay:var(--color-indigo-50)]/20 [--btn-bg:var(--color-indigo-300)] [--btn-border:var(--color-indigo-400)]/90 font-bold',
+      'dark:text-white dark:[--btn-bg:var(--color-indigo-600)] dark:[--btn-hover-overlay:var(--color-white)]/10',
+      '[--btn-icon:var(--color-indigo-600)] data-active:[--btn-icon:var(--color-indigo-800)] data-hover:[--btn-icon:var(--color-indigo-800)] dark:[--btn-icon:var(--color-indigo-300)] dark:data-active:[--btn-icon:var(--color-indigo-200)] dark:data-hover:[--btn-icon:var(--color-indigo-200)]',
     ],
     cyan: [
       'text-cyan-950 [--btn-bg:var(--color-cyan-300)] [--btn-border:var(--color-cyan-400)]/80 [--btn-hover-overlay:var(--color-white)]/25',

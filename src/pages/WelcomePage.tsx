@@ -2,14 +2,15 @@ import React from 'react';
 import { Heading } from '../components/catalyst/heading';
 import { Text } from '../components/catalyst/text';
 import { Button } from '../components/catalyst/button';
-import { Link } from '../components/catalyst/link';
 import { PRIMARY_BUTTON_COLOR } from '../config/theme';
+
+// No props needed for this simple page
 
 const WelcomePage: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-      <Heading level={1} className="mb-6">
-        Discover Your Learning Style
+    <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+      <Heading level={1} className="mb-6 text-3xl sm:text-4xl">
+        Learning Style Quiz
       </Heading>
       
       <Text className="mb-8 max-w-2xl mx-auto">
@@ -41,7 +42,11 @@ const WelcomePage: React.FC = () => {
       </div>
       
       <div className="flex justify-center">
-        <Button href="/quiz/1" color={PRIMARY_BUTTON_COLOR}>
+        <Button 
+          href="/quiz/1" 
+          color={PRIMARY_BUTTON_COLOR} 
+          className="text-lg px-6 py-3 shadow-md hover:shadow-lg transition-all"
+        >
           Start Quiz Now
         </Button>
       </div>

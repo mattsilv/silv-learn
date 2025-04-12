@@ -6,7 +6,6 @@ import { Textarea } from '../catalyst/textarea';
 import { Field, Label } from '../catalyst/fieldset';
 import { Button } from '../catalyst/button';
 import { ClipboardDocumentIcon } from '@heroicons/react/16/solid';
-import clsx from 'clsx';
 
 interface ResultsDisplayProps {
   results: LearningStyleResults;

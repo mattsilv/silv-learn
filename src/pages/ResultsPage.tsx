@@ -3,12 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ResultsDisplay from '../components/quiz/ResultsDisplay';
 import { calculateLearningStyle } from '../utils/calculateLearningStyle';
 import { Button } from '../components/catalyst/button';
-import { Link } from '../components/catalyst/link';
 import { AnswerSelections, QuizData, LearningStyleResults } from '../types/quiz';
 import quizData from '../data/learning-style.json'; // Import quiz data to map answers
-import { Textarea } from '../components/catalyst/textarea';
-import { Field, Label } from '../components/catalyst/fieldset';
-import { ClipboardDocumentIcon } from '@heroicons/react/16/solid';
 
 // Helper function (can be moved to utils if preferred)
 const decodeAnswersFromQuery = (queryString: string): AnswerSelections => {
@@ -82,9 +78,11 @@ const generateLLMPrompt = (results: LearningStyleResults): string => {
 
     const styleList = sortedStyles.map((style, index) => 
         `${index + 1}. ${style.style} (${style.percentage}%): ${style.description}`
-    ).join('\\n'); // Use \\n for newlines in the prompt text
+    ).join('\n'); // Use \n for newlines in the prompt text
 
-    const prompt = `My learning profile based on a recent assessment suggests the following preferences, ranked by strength:\n\n${styleList}\n\nPlease explain the topic primarily using methods suited for the top style (${sortedStyles[0].style}). Where appropriate, also incorporate techniques beneficial for the secondary style(s) listed, adapting the explanation to leverage multiple modalities based on this ranking. Focus on optimizing the explanation for my learning style(s):`;
+    const specificTopic = "how generative AI in chat works"; // Define the specific topic
+
+    const prompt = `My learning profile based on a recent assessment suggests the following preferences, ranked by strength:\n\n${styleList}\n\nPlease explain the topic primarily using methods suited for the top style (${sortedStyles[0].style}). Where appropriate, also incorporate techniques beneficial for the secondary style(s) listed, adapting the explanation to leverage multiple modalities based on this ranking. Focus on optimizing the explanation for my learning style(s).\n\nTopic: ${specificTopic}`;
 
     return prompt;
 };

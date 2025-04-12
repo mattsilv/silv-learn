@@ -2,8 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import WelcomePage from './pages/WelcomePage';
 import QuizPage from './pages/QuizPage';
 import ResultsPage from './pages/ResultsPage';
-import { ThemeSwitcher } from './components/common/ThemeSwitcher';
-import AppVersion from './components/common/AppVersion';
 import { FaPersonRunning, FaLaptopCode, FaGithub } from 'react-icons/fa6';
 
 function App() {
