@@ -12,6 +12,7 @@ export interface Question {
 export interface QuizData {
   title: string;
   instructions: string;
+  version: string;
   questions: Question[];
 }
 

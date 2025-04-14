@@ -16,12 +16,12 @@
   @apply bg-gray-100 dark:bg-gray-700;
 }
 
-/* Override default focus styles from Headless UI */
-[data-focus] {
+/* Override default focus styles from Headless UI - scoped to menu items only */
+.headlessui-menu-item[data-focus] {
   @apply bg-gray-100 dark:bg-gray-700 !important;
 }
 
-[data-focus].data-focus\:bg-blue-500 {
+.headlessui-menu-item[data-focus].data-focus\:bg-blue-500 {
   @apply bg-gray-100 dark:bg-gray-700 text-inherit !important;
 }
 

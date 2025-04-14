@@ -62,6 +62,7 @@ function AppLayout() {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
   const isCurrent = (path: string) => {

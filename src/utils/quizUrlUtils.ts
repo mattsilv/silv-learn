@@ -1,36 +1,54 @@
 import { AnswerSelections } from '../types/quiz';
 
-// Helper to encode answers into a query string using hyphens for multiple selections
+// Helper to encode answers into a query string using `optionId~priority` format, separated by `_`
 export const encodeAnswersToQuery = (answers: AnswerSelections): string => {
   const params = new URLSearchParams();
-  Object.entries(answers).forEach(([questionId, selectedOptions]) => {
-    if (selectedOptions && selectedOptions.length > 0) {
-      // Sort options for consistent URL generation
-      const sortedOptions = [...selectedOptions].sort();
-      params.set(`q${questionId}`, sortedOptions.join('-')); 
+  Object.entries(answers).forEach(([questionId, orderedOptions]) => {
+    if (orderedOptions && orderedOptions.length > 0) {
+      // Map options to 'optionId~priority' strings (priority is 1-based index)
+      const prioritizedOptions = orderedOptions.map((optionId, index) => `${optionId}~${index + 1}`);
+      params.set(`q${questionId}`, prioritizedOptions.join('_')); // Join with underscore
     }
   });
   const queryString = params.toString();
-  // Return empty string if no answers, otherwise return the query string starting with ?
-  return queryString ? `?${queryString}` : ''; 
+  return queryString ? `?${queryString}` : '';
 };
 
-// Helper to decode answers from a query string, supporting both comma and hyphen separators
+// Helper to decode answers from a query string, supporting the new `optionId~priority` format
 export const decodeAnswersFromQuery = (queryString: string): AnswerSelections => {
-  // Ensure queryString is treated as a string, default to empty if null/undefined
   const search = typeof queryString === 'string' ? queryString : '';
   const params = new URLSearchParams(search);
   const decodedAnswers: AnswerSelections = {};
 
   for (const [key, value] of params.entries()) {
-    if (key.startsWith('q') && value) { // Ensure value is not empty
+    if (key.startsWith('q') && value) {
       const questionId = parseInt(key.substring(1), 10);
       if (!isNaN(questionId)) {
-        // Split by comma (old) or hyphen (new) for backward compatibility
-        // Filter out any empty strings that might result from splitting (e.g., trailing separator)
-        const answers = value.split(/,|-/).filter(ans => ans !== '');
-        if (answers.length > 0) {
-            decodedAnswers[questionId] = answers;
+        // Split by underscore
+        const pairs = value.split('_');
+        const optionsWithPriority: { id: string; priority: number }[] = [];
+
+        pairs.forEach(pair => {
+          // Handle both old format (just ID) and new format (ID~priority)
+          const parts = pair.split('~'); // Split by tilde now
+          const optionId = parts[0];
+          const priority = parts.length > 1 ? parseInt(parts[1], 10) : -1; // Assign default priority if missing
+
+          if (optionId && !isNaN(priority)) {
+             optionsWithPriority.push({ id: optionId, priority: priority });
+          } else if (optionId && parts.length === 1) {
+            // Fallback for old format or incomplete pair - assign max priority to appear last? Or index?
+            // Let's use index as a fallback priority for now, assuming old format means order didn't matter.
+            optionsWithPriority.push({ id: optionId, priority: optionsWithPriority.length + 1 });
+          }
+        });
+
+        // Sort by priority
+        optionsWithPriority.sort((a, b) => a.priority - b.priority);
+
+        // Store only the ordered IDs
+        if (optionsWithPriority.length > 0) {
+          decodedAnswers[questionId] = optionsWithPriority.map(opt => opt.id);
         }
       }
     }

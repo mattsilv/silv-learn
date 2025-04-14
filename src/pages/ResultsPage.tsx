@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ResultsDisplay from '../components/quiz/ResultsDisplay';
 import { calculateLearningStyle } from '../utils/calculateLearningStyle';
@@ -6,12 +6,18 @@ import { Button } from '../components/catalyst/button';
 import { AnswerSelections, QuizData, LearningStyleResults } from '../types/quiz';
 import quizData from '../data/learning-style.json'; // Import quiz data to map answers
 import { decodeAnswersFromQuery } from '../utils/quizUrlUtils'; // Import from utils
+import { useAuth } from '../hooks/useAuth'; // Import useAuth
+import { LoginModal } from '../components/auth/LoginModal'; // Import LoginModal
+import { Text } from '../components/catalyst/text'; // Import Text for status messages
+import { ArrowPathIcon } from '@heroicons/react/20/solid'; // For loading spinner
+import { generateLLMPrompt } from '../utils/promptUtils'; // Import the function
 
-// Helper function to calculate scores from answers
+// Helper function to calculate scores from answers, incorporating priority weighting
 const calculateScoresFromAnswers = (
   answers: AnswerSelections, 
   data: QuizData
 ) => {
+     // Use floating point numbers for scores due to weighting
      const scoresInternal: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 };
      const questionMap = new Map(data.questions.map(q => [q.id, q]));
 
@@ -19,135 +25,61 @@ const calculateScoresFromAnswers = (
        const questionId = parseInt(questionIdStr, 10);
        const question = questionMap.get(questionId);
        if (question) {
-         selectedOptionIds.forEach(optionId => {
+         // Iterate through the ORDERED selected option IDs
+         selectedOptionIds.forEach((optionId, index) => { // Get index for priority
            const scoreType = optionId; // Option ID is the score type (A, B, C, D)
            if (scoreType && scoresInternal.hasOwnProperty(scoreType)) {
-             scoresInternal[scoreType]++;
+             let weight = 0;
+             const priority = index; // 0-based index is the priority
+
+             if (priority === 0) { // Priority 1
+               weight = 2;
+             } else if (priority === 1) { // Priority 2
+               weight = 1;
+             } else { // Priority 3+
+               weight = 0.5;
+             }
+             
+             scoresInternal[scoreType] += weight; // Add the weighted score
            }
          });
        }
      });
      // Ensure the returned object matches StyleCounts type EXACTLY
+     // Round the scores before returning, as StyleCounts expects numbers (integers)
+     // Although calculateLearningStyle handles floats, the type expects int. Let's round.
      return { 
-        a: scoresInternal['A'] ?? 0, 
-        b: scoresInternal['B'] ?? 0, 
-        c: scoresInternal['C'] ?? 0, 
-        d: scoresInternal['D'] ?? 0 
+        a: Math.round(scoresInternal['A'] ?? 0), 
+        b: Math.round(scoresInternal['B'] ?? 0), 
+        c: Math.round(scoresInternal['C'] ?? 0), 
+        d: Math.round(scoresInternal['D'] ?? 0) 
      };
 };
 
-// Define type for individual result items derived from LearningStyleResults
-type StyleResult = {
-  style: string;
-  score: number;
-  percentage: number;
-  description: string;
-};
+// Define payload type (matching backend spec)
+interface QuizResultPayload {
+  quizType: string;
+  quizVersion: string;
+  userId: string | null;
+  scores: { a: number; b: number; c: number; d: number };
+  results: LearningStyleResults;
+  prioritizedAnswers: AnswerSelections;
+  timestamp: string;
+}
 
-// Function to generate the LLM prompt
-const generateLLMPrompt = (results: LearningStyleResults): string => {
-    const hasMultimodal = results.multimodal !== undefined;
-    const sortedStyles = Object.values(results)
-        .filter((r): r is StyleResult => 
-            !!r && typeof r === 'object' && 'style' in r && r.style !== 'Multimodal' && !isNaN(r.percentage) && r.percentage > 0
-        )
-        .sort((a, b) => b.percentage - a.percentage);
-
-    if (sortedStyles.length === 0) {
-        return "No specific learning style preferences detected.";
-    }
-
-    const styleList = sortedStyles.map((style, index) => 
-        `${index + 1}. ${style.style} (${style.percentage}%): ${style.description}`
-    ).join('\n');
-
-    // Define the placeholder just once for the end
-    const topicPlaceholder = "[Insert your topic here]"; 
-
-    let prompt = `My learning style assessment results:\n\n${styleList}\n\n`;
-    
-    if (hasMultimodal) {
-        prompt += `I have a multimodal learning preference with strengths in multiple areas. ${results.multimodal!.description}\n\n`;
-        // Modify instruction line - remove placeholder
-        prompt += `When explaining the topic below, please:\n\n`; 
-        prompt += `1. Start with a brief overview using mixed modalities...\n`;
-        prompt += `2. For complex concepts, present information in multiple formats:\n`;
-        
-        // Add specific strategies for each of their top styles
-        sortedStyles.slice(0, 2).forEach(style => {
-            if (style.style === 'Visual') {
-                prompt += `   - Include visual metaphors, diagrams, or mental imagery I can visualize\n`;
-            } else if (style.style === 'Auditory') {
-                prompt += `   - Frame explanations conversationally as if we're discussing the topic\n`;
-            } else if (style.style === 'Reading/Writing') {
-                prompt += `   - Provide clear, well-structured explanations with key points emphasized\n`;
-            } else if (style.style === 'Kinesthetic') {
-                prompt += `   - Include practical examples, interactive thought experiments, or analogies to physical experiences\n`;
-            }
-        });
-        
-        prompt += `3. Connect new information to practical applications and real-world contexts\n`;
-        prompt += `4. Summarize key points at the end using multiple approaches\n\n`;
-    } else {
-        const primaryStyle = sortedStyles[0];
-        const secondaryStyles = sortedStyles.slice(1, 3);
-        prompt += `My primary learning style is ${primaryStyle.style} (${primaryStyle.percentage}%).\n\n`;
-        // Modify instruction line - remove placeholder
-        prompt += `When explaining the topic below, please:\n\n`; 
-        
-        // Add specific strategies for their primary style
-        if (primaryStyle.style === 'Visual') {
-            prompt += `1. Use rich visual descriptions, metaphors, and imagery I can visualize\n`;
-            prompt += `2. Describe diagrams, charts, or visual relationships between concepts\n`;
-            prompt += `3. Organize information with clear visual structure (hierarchies, sequences, relationships)\n`;
-        } else if (primaryStyle.style === 'Auditory') {
-            prompt += `1. Use a conversational tone as if we're discussing the topic verbally\n`;
-            prompt += `2. Explain concepts through analogies, stories, and verbal examples\n`;
-            prompt += `3. Repeat key points in different ways to reinforce auditory processing\n`;
-        } else if (primaryStyle.style === 'Reading/Writing') {
-            prompt += `1. Provide well-structured, logical explanations with clear terminology\n`;
-            prompt += `2. Present information in organized lists, paragraphs, and sections\n`;
-            prompt += `3. Define terms precisely and use written explanations rather than analogies\n`;
-        } else if (primaryStyle.style === 'Kinesthetic') {
-            prompt += `1. Include practical examples and real-world applications\n`;
-            prompt += `2. Use interactive thought experiments that let me mentally "do" something\n`;
-            prompt += `3. Connect concepts to physical experiences or hands-on activities\n`;
-        }
-        
-        // Add supplementary approaches if they have secondary styles
-        if (secondaryStyles.length > 0) {
-            prompt += `\nAdditionally, please incorporate some elements that support my secondary learning style(s):\n`;
-            secondaryStyles.forEach(style => {
-                if (style.percentage >= 15) { // Only include meaningful secondary styles
-                    prompt += `- ${style.style} (${style.percentage}%): `;
-                    
-                    if (style.style === 'Visual') {
-                        prompt += `Include some visual descriptions or spatial relationships\n`;
-                    } else if (style.style === 'Auditory') {
-                        prompt += `Include some conversational elements or verbal explanations\n`;
-                    } else if (style.style === 'Reading/Writing') {
-                        prompt += `Include some structured text explanations or defined terminology\n`;
-                    } else if (style.style === 'Kinesthetic') {
-                        prompt += `Include some practical applications or interactive elements\n`;
-                    }
-                }
-            });
-        }
-    }
-    
-    // Append the placeholder only at the very end
-    prompt += `\nTopic to explain: ${topicPlaceholder}`;
-    
-    return prompt;
-};
+// Define localStorage key
+const PENDING_RESULTS_KEY = 'pendingQuizResults';
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { token, user, isLoading: isAuthLoading } = useAuth();
   const [data] = React.useState<QuizData>(quizData as QuizData);
   const [isCopied, setIsCopied] = useState(false);
   const [topic, setTopic] = useState<string>("How does quantum computing work"); // State for topic input
   const [finalPrompt, setFinalPrompt] = useState<string>(''); // State for the final, updated prompt
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // State for login modal
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error' | 'promptLogin'>('idle');
 
   // Decode answers from URL
   const answers = useMemo(() => decodeAnswersFromQuery(location.search), [location.search]);
@@ -210,6 +142,99 @@ const ResultsPage: React.FC = () => {
     navigate('/'); // Go back to welcome page
   };
 
+  // Placeholder for the actual API call
+  const saveQuizResultsAPI = useCallback(async (payload: QuizResultPayload): Promise<boolean> => {
+      console.log("Attempting to save quiz results:", payload);
+      setSaveStatus('saving');
+      const apiUrl = import.meta.env.VITE_WORKER_API_URL;
+      const endpoint = `${apiUrl}/api/results/submit`; // Use the generic endpoint
+
+      try {
+          // Enable the actual fetch call
+          const headers: HeadersInit = { 'Content-Type': 'application/json' };
+          if (token) { // Add auth header only if logged in (which it should be in this flow)
+              headers['Authorization'] = `Bearer ${token}`;
+          }
+          
+          const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify(payload),
+          });
+
+          if (response.ok) {
+              console.log("Quiz results saved successfully via ResultsPage.");
+              setSaveStatus('saved');
+              // Pending results shouldn't exist here, but check just in case?
+              // if (localStorage.getItem(PENDING_RESULTS_KEY)) {
+              //    try { localStorage.removeItem(PENDING_RESULTS_KEY); } catch (e) { console.error("Error clearing potentially stale pending results:", e); }
+              // }
+              return true;
+          } else {
+              console.error("Failed to save quiz results via ResultsPage:", response.status, await response.text());
+              setSaveStatus('error');
+              return false;
+          }
+          
+         /* --- Remove Simulation --- 
+         console.log("Simulating successful API save.");
+         setSaveStatus('saved');
+         if (localStorage.getItem(PENDING_RESULTS_KEY)) {
+             try { localStorage.removeItem(PENDING_RESULTS_KEY); } catch (e) { console.error("Error clearing pending results:", e); }
+         }
+         return true;
+         --- End Simulation --- */
+
+      } catch (error) {
+          console.error("Error calling save API:", error);
+          setSaveStatus('error');
+          return false;
+      }
+  }, [token]); // Depend on token for auth header logic
+
+  // Effect to trigger automatic save for logged-in users
+  useEffect(() => {
+      if (results && user && token && saveStatus === 'idle' && !isAuthLoading) {
+          console.log("User logged in, attempting automatic save...");
+          const payload: QuizResultPayload = {
+              quizType: "learning_style",
+              quizVersion: data.version,
+              userId: user.id,
+              scores: scores,
+              results: results,
+              prioritizedAnswers: answers,
+              timestamp: new Date().toISOString(),
+          };
+          saveQuizResultsAPI(payload);
+      } else if (results && !token && saveStatus === 'idle' && !isAuthLoading) {
+          // If results are ready, user is not logged in, and we haven't decided action yet
+          console.log("User not logged in, prompting to save results.");
+          setSaveStatus('promptLogin');
+      }
+  }, [results, user, token, saveStatus, isAuthLoading, data.version, scores, answers, saveQuizResultsAPI]);
+
+  // Handler for the "Save Results" button (for non-logged-in users)
+  const handlePromptSave = () => {
+      if (!results) return; // Should not happen if button is visible, but safeguard
+
+      const payload: Omit<QuizResultPayload, 'userId'> = {
+          quizType: "learning_style",
+          quizVersion: data.version,
+          scores: scores,
+          results: results,
+          prioritizedAnswers: answers,
+          timestamp: new Date().toISOString(),
+      };
+      try {
+          localStorage.setItem(PENDING_RESULTS_KEY, JSON.stringify(payload));
+          console.log("Pending results saved to localStorage.");
+          setIsLoginModalOpen(true); // Open login modal
+      } catch (e) {
+           console.error("Error saving pending results to localStorage:", e);
+           setSaveStatus('error'); // Show error if localStorage fails
+      }
+  };
+
   // If no valid results, show a message and link to start the quiz
   if (!hasValidAnswers || !results) {
     return (
@@ -222,6 +247,9 @@ const ResultsPage: React.FC = () => {
         </Button>
       </div>
     );
+  } else if (!results && isAuthLoading) {
+      // Show loading indicator while auth is checked, potentially before results are ready
+      return <div className="p-8 text-center">Loading Results...</div>;
   }
 
   return (
@@ -233,6 +261,9 @@ const ResultsPage: React.FC = () => {
         handleTopicChange={handleTopicChange}
         handleCopy={handleCopy}
         isCopied={isCopied}
+        saveStatus={saveStatus}
+        isAuthLoading={isAuthLoading}
+        onPromptSave={handlePromptSave}
       />
 
       <div className="mt-8 flex justify-center">
@@ -259,6 +290,8 @@ const ResultsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 };

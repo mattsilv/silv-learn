@@ -53,15 +53,22 @@ export function useQuizState() {
   const toggleAnswer = (questionId: number, optionId: string) => {
     setAnswers(prev => {
       const currentAnswers = prev[questionId] || [];
-      const newAnswersArray = currentAnswers.includes(optionId)
-        ? currentAnswers.filter(id => id !== optionId)
-        : [...currentAnswers, optionId];
+      let newAnswersArray: string[];
+
+      if (currentAnswers.includes(optionId)) {
+        // Remove the option if it exists
+        newAnswersArray = currentAnswers.filter(id => id !== optionId);
+      } else {
+        // Add the option to the end (lowest priority)
+        newAnswersArray = [...currentAnswers, optionId];
+      }
 
       const newAnswersState = {
         ...prev,
-        [questionId]: newAnswersArray.length > 0 ? newAnswersArray : undefined, 
+        [questionId]: newAnswersArray.length > 0 ? newAnswersArray : undefined,
       };
 
+      // Clean up empty arrays
       const finalAnswersState = Object.entries(newAnswersState).reduce<AnswerSelections>((acc, [key, value]) => {
         if (value !== undefined) {
           acc[parseInt(key)] = value;
@@ -73,6 +80,35 @@ export function useQuizState() {
       return finalAnswersState;
     });
   };
+
+  // New function to handle reordering of answers for a specific question
+  const reorderAnswers = (questionId: number, orderedOptionIds: string[]) => {
+    setAnswers(prev => {
+      const newAnswersState = {
+        ...prev,
+        [questionId]: orderedOptionIds.length > 0 ? orderedOptionIds : undefined,
+      };
+
+       // Clean up potentially empty arrays after reorder (if all items dragged out?)
+      const finalAnswersState = Object.entries(newAnswersState).reduce<AnswerSelections>((acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[parseInt(key)] = value;
+        }
+        return acc;
+      }, {});
+
+
+      updateUrlWithAnswers(finalAnswersState);
+      return finalAnswersState;
+    });
+  };
+
+  // New function to clear all answers and update URL
+  const clearAllAnswers = useCallback(() => {
+      setAnswers({});
+      updateUrlWithAnswers({});
+      console.log('Quiz answers cleared.');
+  }, [updateUrlWithAnswers]);
 
   const isOptionSelected = (questionId: number, optionId: string): boolean => {
     const selectedOptions = answers[questionId] || [];
@@ -92,5 +128,7 @@ export function useQuizState() {
     isOptionSelected,
     goToNextQuestion,
     goToPreviousQuestion,
+    reorderAnswers,
+    clearAllAnswers,
   };
 }

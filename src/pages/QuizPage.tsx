@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuizState } from '../hooks/useQuizState';
 import QuestionCard from '../components/quiz/QuestionCard';
 import QuizProgress from '../components/quiz/QuizProgress';
@@ -16,15 +17,27 @@ const QuizPage: React.FC = () => {
     isFirstQuestion,
     isLastQuestion,
     progress,
+    answers,
     toggleAnswer,
-    isOptionSelected,
+    reorderAnswers,
     goToNextQuestion,
     goToPreviousQuestion,
+    clearAllAnswers,
   } = useQuizState();
 
   if (!currentQuestion) {
     return <div className="p-8 text-center">Loading...</div>;
   }
+
+  const currentSelectedOptionIds = answers[currentQuestion.id] || [];
+
+  const handleBackAction = () => {
+    if (isFirstQuestion) {
+      clearAllAnswers();
+    } else {
+      goToPreviousQuestion();
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -41,18 +54,18 @@ const QuizPage: React.FC = () => {
 
       <QuestionCard
         question={currentQuestion}
+        selectedOptionIds={currentSelectedOptionIds}
         onToggleAnswer={toggleAnswer}
-        isOptionSelected={isOptionSelected}
+        onReorderAnswers={reorderAnswers}
       />
 
       <div className="mt-8 flex justify-between">
         <Button
           outline
-          onClick={goToPreviousQuestion}
-          disabled={isFirstQuestion}
+          onClick={handleBackAction}
           className="px-6 py-2"
         >
-          Previous
+          {isFirstQuestion ? 'Start Over' : 'Previous'}
         </Button>
         
         <Button

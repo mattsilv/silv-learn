@@ -1,6 +1,7 @@
 {
-  "title": "What's Your Learning Style?",
-  "instructions": "For each question, select ALL the options that apply to you.",
+  "title": "Learning Style Discovery Quiz",
+  "instructions": "Select the options that best describe how you prefer to learn. You can select multiple options and prioritize them.",
+  "version": "1.0.0",
   "questions": [
     {
       "id": 1,

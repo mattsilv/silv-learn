@@ -1,14 +1,15 @@
 import React from 'react';
+import { LearningStyleResults } from '../../types/quiz';
 import { Heading } from '../catalyst/heading';
 import { Text } from '../catalyst/text';
-import { LearningStyleResults } from '../../types/quiz';
 import { Textarea } from '../catalyst/textarea';
 import { Field, Label } from '../catalyst/fieldset';
 import { Button } from '../catalyst/button';
 import { Input } from '../catalyst/input';
+import { Badge } from '../catalyst/badge';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
 
-// Define type for individual result items derived from LearningStyleResults
-// (Keep this type if it's still needed locally, otherwise remove)
+// Re-define StyleResult type locally
 type StyleResult = {
   style: string;
   score: number;
@@ -23,6 +24,9 @@ interface ResultsDisplayProps {
   handleTopicChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCopy: () => void;
   isCopied: boolean;
+  saveStatus: 'idle' | 'saving' | 'saved' | 'error' | 'promptLogin';
+  isAuthLoading: boolean;
+  onPromptSave: () => void;
 }
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ 
@@ -31,9 +35,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   topic,
   handleTopicChange,
   handleCopy, 
-  isCopied 
+  isCopied,
+  saveStatus,
+  isAuthLoading,
+  onPromptSave
 }) => {
-  // Sort non-multimodal results by score (highest first)
+  // Use the locally defined StyleResult type
   const sortedStyles: StyleResult[] = Object.values(results)
     .filter((r): r is StyleResult => !!r && typeof r === 'object' && 'style' in r && r.style !== 'Multimodal')
     .sort((a, b) => b.score - a.score);
@@ -49,7 +56,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
     .filter(r => !!r && 'percentage' in r && !isNaN(r.percentage))
     .sort((a, b) => ('score' in a && 'score' in b) ? b.score - a.score : 0); // Sort by score for display order
 
-  if (!topStyle) {
+  if (!topStyle && !hasMultimodal) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-3xl mx-auto text-center">
         <Heading level={1} className="mb-4">No results to display.</Heading>
@@ -224,6 +231,41 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
             </Button>
           </div>
         </Field>
+      </div>
+      
+      <div className="mt-6 text-center p-4 border rounded-md bg-gray-50 dark:bg-gray-800 min-h-[76px]">
+          {saveStatus === 'idle' && isAuthLoading && (
+              <Text className="italic text-gray-500 dark:text-gray-400">Checking login status...</Text>
+          )}
+          {saveStatus === 'promptLogin' && (
+              <>
+                  <Text className="mb-3">Want to save your results to track your progress?</Text>
+                  <Button color="indigo" onClick={onPromptSave}>
+                      Login to Save Results
+                  </Button>
+              </>
+          )}
+           {saveStatus === 'saving' && (
+              <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-300">
+                 <ArrowPathIcon className="size-5 animate-spin" />
+                 <Text>Saving results...</Text>
+              </div>
+           )}
+           {saveStatus === 'saved' && (
+              <div className="flex items-center justify-center gap-3">
+                  <Text className="text-green-600 dark:text-green-400">Results saved successfully!</Text>
+                  <Button 
+                      href="/account" 
+                      plain
+                      className="text-sm underline"
+                   > 
+                      View Profile
+                  </Button>
+              </div>
+           )}
+           {saveStatus === 'error' && (
+              <Text className="text-red-600 dark:text-red-400">Could not save results. Please try again later.</Text>
+           )}
       </div>
     </div>
   );
