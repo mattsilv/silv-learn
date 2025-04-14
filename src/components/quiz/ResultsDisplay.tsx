@@ -189,13 +189,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
                 value={topic}
                 onChange={handleTopicChange}
                 placeholder="Enter your topic here"
-                style={{
-                  padding: '0.875rem 1rem',
-                  fontSize: '1rem',
-                  lineHeight: '1.5',
-                  height: '3.25rem'
-                }}
-                className="w-full"
+                className="w-full px-4 py-3.5 text-base h-[3.25rem]"
               />
             </span>
           </div>
@@ -204,18 +198,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
             <Label htmlFor="customized-prompt" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Your Customized AI Learning Prompt
             </Label>
-            <Textarea 
+            <Textarea
               id="customized-prompt"
-              readOnly 
+              readOnly
               value={finalPrompt}
               rows={14}
-              style={{ 
-                padding: '0.75rem',
-                fontSize: '0.6rem',
-                lineHeight: '1.5',
-                backgroundColor: '#f8f9fa',
-                border: '1px solid #e5e7eb'
-              }}
+              className="p-3 text-[0.8rem] leading-relaxed"
               onClick={(e) => e.currentTarget.select()}
             />
           </div>

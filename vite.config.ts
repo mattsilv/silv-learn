@@ -22,6 +22,9 @@ export default defineConfig(mergeConfig(
     optimizeDeps: {
       include: ['react-icons/fa'],
     },
+    server: {
+      port: 3000,
+    },
   },
   {
     test: {

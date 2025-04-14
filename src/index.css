@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom dropdown styling */
+[data-headlessui-state="open"] button[aria-haspopup="menu"] {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+/* Override HeadlessUI default focus/hover behaviors */
+.headlessui-menu-item {
+  @apply cursor-pointer transition-colors duration-100 ease-in-out;
+}
+
+.headlessui-menu-item:hover {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+/* Override default focus styles from Headless UI */
+[data-focus] {
+  @apply bg-gray-100 dark:bg-gray-700 !important;
+}
+
+[data-focus].data-focus\:bg-blue-500 {
+  @apply bg-gray-100 dark:bg-gray-700 text-inherit !important;
+}
+
 /* Add the dance animation */
 @keyframes danceMoves {
   0%, 70% {
